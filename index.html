@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="no-referrer" />
+    
+    <!-- Primary Meta Tags -->
+    <title>Natraj+ | Exclusive Access</title>
+    <meta name="title" content="Natraj+ | Exclusive Access">
+    <meta name="description" content="Unlock premium rewards and beta testing opportunities.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              display: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              brand: {
+                primary: '#0063e5', // Disney+ Blue
+                secondary: '#3b82f6', // Lighter Blue
+                accent: '#ffffff', // White
+                dark: '#0f1014', // Disney+ Dark BG
+                navy: '#1a1d29', // Disney+ Card BG
+                surface: '#262933', // Slightly lighter surface
+                light: '#f9f9f9',
+              }
+            },
+            backgroundImage: {
+              'hero-gradient': 'linear-gradient(to bottom, rgba(4, 7, 20, 0) 0%, #040714 100%)',
+              'brand-gradient': 'linear-gradient(to right, #0063e5, #004199)',
+              'glow': 'radial-gradient(circle at center, #1f2545 0%, #0f1014 100%)'
+            },
+            animation: {
+              'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              fadeInUp: {
+                '0%': { opacity: '0', transform: 'translateY(20px)' },
+                '100%': { opacity: '1', transform: 'translateY(0)' },
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0f1014; /* Disney+ Background */
+        color: #f9f9f9;
+        overflow-x: hidden;
+      }
+      
+      .brand-btn {
+        background-color: #0063e5;
+        color: white;
+        transition: all 0.2s ease;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+      }
+      .brand-btn:hover {
+        background-color: #0483ee;
+        transform: scale(1.02);
+      }
+      
+      /* Cinematic Input */
+      .cine-input {
+        background: #31343e;
+        border: 1px solid transparent;
+        color: white;
+      }
+      .cine-input:focus {
+        background: #4a4e5a;
+        border-color: #f9f9f9;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #0f1014; }
+      ::-webkit-scrollbar-thumb { background: #2f3340; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #0063e5; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
+</head>
+  <body class="antialiased">
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

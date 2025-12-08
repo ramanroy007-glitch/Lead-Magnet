@@ -1,54 +1,60 @@
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="referrer" content="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     
-    <!-- Primary Meta Tags -->
-    <title>Natraj+ | Exclusive Access</title>
-    <meta name="title" content="Natraj+ | Exclusive Access">
-    <meta name="description" content="Unlock premium rewards and beta testing opportunities.">
+    <title>Natraj Rewards - Sweepstakes, Surveys & Deals</title>
+    <meta name="title" content="Natraj Rewards - Exclusive Rewards & Savings">
+    <meta name="description" content="Discover verified sweepstakes, paid survey opportunities, and exclusive discount offers. Join our free rewards community today.">
+    <meta name="robots" content="index, follow">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lottie Player -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
-        darkMode: 'class',
         theme: {
           extend: {
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              display: ['Inter', 'sans-serif'],
+              sans: ['"Inter"', 'system-ui', 'sans-serif'],
             },
             colors: {
-              brand: {
-                primary: '#0063e5', // Disney+ Blue
-                secondary: '#3b82f6', // Lighter Blue
-                accent: '#ffffff', // White
-                dark: '#0f1014', // Disney+ Dark BG
-                navy: '#1a1d29', // Disney+ Card BG
-                surface: '#262933', // Slightly lighter surface
-                light: '#f9f9f9',
-              }
+              'inbox-orange': '#F36D36',
+              'inbox-green': '#8DC63F',
+              'inbox-green-dark': '#689F38',
+              'inbox-purple': '#D0368C',
+              'inbox-purple-hover': '#AD1457',
+              'inbox-blue': '#0070BA',
+              'slate-800': '#1e293b',
             },
-            backgroundImage: {
-              'hero-gradient': 'linear-gradient(to bottom, rgba(4, 7, 20, 0) 0%, #040714 100%)',
-              'brand-gradient': 'linear-gradient(to right, #0063e5, #004199)',
-              'glow': 'radial-gradient(circle at center, #1f2545 0%, #0f1014 100%)'
+            boxShadow: {
+              'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+              'input': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
             },
             animation: {
-              'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
-              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'fade-in': 'fadeIn 0.5s ease-out forwards',
+              'bounce-slow': 'bounce 3s infinite',
+              'blob': 'blob 12s infinite',
             },
             keyframes: {
-              fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(20px)' },
+              fadeIn: {
+                '0%': { opacity: '0', transform: 'translateY(10px)' },
                 '100%': { opacity: '1', transform: 'translateY(0)' },
+              },
+              blob: {
+                "0%": { transform: "translate(0px, 0px) scale(1)" },
+                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
+                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
+                "100%": { transform: "translate(0px, 0px) scale(1)" }
               }
             }
           }
@@ -56,56 +62,26 @@
       }
     </script>
     <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        background-color: #0f1014; /* Disney+ Background */
-        color: #f9f9f9;
-        overflow-x: hidden;
-      }
-      
-      .brand-btn {
-        background-color: #0063e5;
-        color: white;
-        transition: all 0.2s ease;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-      }
-      .brand-btn:hover {
-        background-color: #0483ee;
-        transform: scale(1.02);
-      }
-      
-      /* Cinematic Input */
-      .cine-input {
-        background: #31343e;
-        border: 1px solid transparent;
-        color: white;
-      }
-      .cine-input:focus {
-        background: #4a4e5a;
-        border-color: #f9f9f9;
-      }
-
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar { width: 8px; }
-      ::-webkit-scrollbar-track { background: #0f1014; }
-      ::-webkit-scrollbar-thumb { background: #2f3340; border-radius: 4px; }
-      ::-webkit-scrollbar-thumb:hover { background: #0063e5; }
+      /* Smooth Scrolling & Base */
+      html { scroll-behavior: smooth; }
+      body { background-color: #fff; color: #333; }
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
     </style>
   <script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.1.1/",
-    "react": "https://aistudiocdn.com/react@^19.1.1",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.27.0",
-    "vite": "https://aistudiocdn.com/vite@^7.2.4",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
+    "vite": "https://aistudiocdn.com/vite@^7.2.6",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
   }
 }
 </script>
 </head>
-  <body class="antialiased">
+  <body class="antialiased font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

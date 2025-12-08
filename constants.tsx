@@ -1,129 +1,102 @@
 
-import React from 'react';
-import type { QuizQuestion, SiteContent, CpaOffer } from './types';
+import type { CpaOffer, SiteContentConfig, QuizConfig, SmtpConfig } from './types';
 
-export const DEFAULT_SITE_CONTENT: SiteContent = {
+// COMPLIANCE NOTE: Content focuses on "Access," "Opportunity," and "Savings" rather than guaranteed income.
+export const DEFAULT_SITE_CONTENT: SiteContentConfig = {
     hero: {
-        headline: "Exclusive Market Research.",
-        subheadline: "Join our elite panel to test apps, take surveys, and provide feedback on digital products.",
-        ctaText: "CHECK ELIGIBILITY"
+        headline: "Your Gateway to Exclusive Rewards & Savings.",
+        subheadline: "Join our premier rewards community. Access verified sweepstakes, high-value surveys, and exclusive discount offers from top brands.",
+        ctaText: "Find My Rewards",
+        trustText: "Verified Sweepstakes & Deals"
     },
-    features: {
-        title: "Participant Benefits",
-        subtitle: "How our market research panel works.",
-        items: [
-            { title: "Verified Studies", desc: "Access legitimate research opportunities." },
-            { title: "Fair Compensation", desc: "Get rewarded for your time and data." },
-            { title: "Instant Access", desc: "See available studies immediately." },
-            { title: "Privacy First", desc: "Your data is anonymized and secure." },
-            { title: "Flexible Tasks", desc: "Participate from any device." },
-            { title: "Premium Support", desc: "Dedicated team for panelists." }
-        ]
+    quiz: {
+        step1Title: "Personalize Your Offers",
+        step2Title: "Select Interests",
+        emailTitle: "Unlock Your Dashboard"
     },
-    testimonials: [
-        { name: "Sarah J.", role: "Panelist", text: "I love testing new apps before they are released. The rewards are a nice bonus!", location: "Verified User" },
-        { name: "Marcus R.", role: "Tester", text: "Legit platform. I qualify for about 3-4 studies a week. Good experience so far.", location: "Verified User" },
-        { name: "Jessica L.", role: "Participant", text: "Simple interface and quick approval process. Highly recommend.", location: "Verified User" }
-    ],
-    seoSection: {
-        title: "About Natraj Rewards",
-        content: "Natraj Rewards is a premier market research recruitment platform. We connect consumers with brands looking for feedback on new products, services, and applications. Our goal is to facilitate valuable insights while rewarding participants for their time."
-    },
-    finalCta: {
-        heading: "Ready to Participate?",
-        subheading: "Check if you qualify for our current research studies.",
-        buttonText: "APPLY NOW"
+    colors: {
+        primary: "#F36D36", // Inbox Orange
+        secondary: "#8DC63F" // Inbox Green
     }
 };
+
+export const DEFAULT_QUIZ_CONFIG: QuizConfig = {
+    questions: [
+        {
+            id: 'age',
+            text: "What is your age range?",
+            subtext: "We use this to match you with age-appropriate sweepstakes and surveys.",
+            options: [
+                { id: '18-24', text: '18 - 24', icon: '🎓' },
+                { id: '25-34', text: '25 - 34', icon: '💼' },
+                { id: '35-44', text: '35 - 44', icon: '🏠' },
+                { id: '45+', text: '45+', icon: '🌟' },
+            ]
+        },
+        {
+            id: 'interest',
+            text: "What interests you most?",
+            subtext: "Select the rewards you are looking for today.",
+            options: [
+                { id: 'sweepstakes', text: 'Cash Sweepstakes', icon: '🏆' },
+                { id: 'surveys', text: 'Paid Surveys', icon: '📝' },
+                { id: 'deals', text: 'Shopping Discounts', icon: '🛍️' },
+            ]
+        }
+    ],
+    emailStepTitle: "Save Your Progress",
+    emailStepSubtext: "Enter your best email to secure your reward matches and receive offer alerts."
+};
+
+export const DEFAULT_SMTP_CONFIG: SmtpConfig = {
+    provider: 'none',
+    host: 'smtp.sendgrid.net',
+    port: 587,
+    user: 'apikey',
+    pass: '',
+    fromEmail: 'rewards@natrajrewards.com'
+};
+
+export const QUIZ_QUESTIONS = DEFAULT_QUIZ_CONFIG.questions; // Legacy export
 
 export const DEFAULT_OFFERS: CpaOffer[] = [
     {
         id: '1',
-        title: '$750 Research Study',
-        description: 'New participant opportunity. Complete the screener to enter.',
-        payout: '$750 VALUE',
-        payoutValue: 750,
-        popularity: 100,
-        ctaText: 'APPLY NOW',
-        url: 'https://example.com',
-        category: 'sweepstakes',
-        isActive: true,
-        imageUrl: 'https://images.unsplash.com/photo-1628102491629-778571d893a3?auto=format&fit=crop&w=600&q=80',
-        instructions: "1. Click Apply.\n2. Complete the short survey.\n3. Enter your details to qualify."
+        title: 'Enter to Win: Tech Bundle Giveaway',
+        url: 'https://google.com',
+        is_active: true,
+        weight: 100,
+        category: 'Shopping',
+        payout: 'Sweepstakes Entry', 
+        description: 'Participate in our partner giveaway for a chance to win the latest gadgets. No purchase necessary.',
+        imageUrl: 'https://images.unsplash.com/photo-1531297461136-82lwDe4105q?auto=format&fit=crop&w=600&q=80',
+        ctaText: 'Enter Now',
+        popularity: 98
     },
     {
         id: '2',
-        title: 'Tech Review Panel',
-        description: 'Test the latest gadgets. Provide feedback on usability.',
-        payout: 'HARDWARE',
-        payoutValue: 1000,
-        popularity: 98,
-        ctaText: 'ACCESS',
-        url: 'https://example.com',
-        category: 'app',
-        isActive: true,
-        imageUrl: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=600&q=80',
-        instructions: "1. Register.\n2. Verify Address.\n3. Wait for selection."
+        title: 'Premium Survey Panel Access',
+        url: 'https://google.com',
+        is_active: true,
+        weight: 95,
+        category: 'Research',
+        payout: 'Earn Per Survey',
+        description: 'Get invited to high-paying consumer research studies. Share your opinion on household brands.',
+        imageUrl: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=600&q=80',
+        ctaText: 'Join Panel',
+        popularity: 92
     },
     {
         id: '3',
-        title: 'Consumer Shopper Panel',
-        description: 'Get a $500 gift card for your favorite store feedback.',
-        payout: '$500 CARD',
-        payoutValue: 500,
-        popularity: 95,
-        ctaText: 'START',
-        url: 'https://example.com',
-        category: 'sweepstakes',
-        isActive: true,
-        imageUrl: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=600&q=80',
-        instructions: "1. Select Store.\n2. Complete Survey.\n3. Get Code."
-    },
-    {
-        id: '4',
-        title: 'Gaming Beta Test',
-        description: 'Play a new game and reach Level 10 to provide data.',
-        payout: 'REWARDS',
-        payoutValue: 50,
-        popularity: 90,
-        ctaText: 'PLAY',
-        url: 'https://example.com',
-        category: 'app',
-        isActive: true,
-        imageUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=600&q=80',
-        instructions: "1. Install App.\n2. Play to Level 10.\n3. Redeem credits."
+        title: 'Exclusive Auto Insurance Savings',
+        url: 'https://google.com',
+        is_active: true,
+        weight: 90,
+        category: 'Finance',
+        payout: 'Save up to $500/yr',
+        description: 'Compare rates in your area. Drivers who switch save an average of $500 per year.',
+        imageUrl: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=600&q=80',
+        ctaText: 'See Rates',
+        popularity: 88
     }
-];
-
-export const QUIZ_QUESTIONS: QuizQuestion[] = [
-  {
-    id: 1,
-    text: "Select Primary Device",
-    type: 'icon-choice',
-    options: [
-      { id: 'iphone', text: 'iOS', icon: '📱' },
-      { id: 'android', text: 'Android', icon: '🤖' },
-      { id: 'desktop', text: 'Desktop', icon: '💻' },
-    ],
-  },
-  {
-      id: 2,
-      text: 'Interests for Studies?',
-      type: 'multiple-choice',
-      options: [
-          { id: 'gaming', text: 'Gaming & Apps' },
-          { id: 'shopping', text: 'Retail & Shopping' },
-          { id: 'finance', text: 'Finance & Banking' },
-      ]
-  },
-  {
-    id: 3,
-    text: 'Reward Preference',
-    type: 'icon-choice',
-    options: [
-      { id: 'paypal', text: 'PayPal', icon: '🅿️' },
-      { id: 'giftcard', text: 'Gift Card', icon: '💳' },
-      { id: 'check', text: 'Check', icon: '🏦' },
-    ],
-  }
 ];

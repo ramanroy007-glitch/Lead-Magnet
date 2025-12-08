@@ -1,87 +1,133 @@
 import React from 'react';
 
-// Page types derived from Hash routes
-export type Page = 'home' | 'offers' | 'offer-detail' | 'admin' | 'admin-login' | 'privacy' | 'terms' | 'info' | 'contact' | 'help' | 'success-stories';
+// --- CORE SYSTEM TYPES ---
 
-export type UserRole = 'super_admin' | 'employee' | null;
+export type Page = 'home' | 'admin' | 'admin-login' | 'info' | 'offers';
+export type UserRole = 'super_admin' | 'employee' | string;
 
-export interface QuizQuestion {
-  id: number;
-  text: string;
-  type: 'multiple-choice' | 'icon-choice';
-  options: {
+// Main Lead object with tracking
+export interface SmartLead {
     id: string;
-    text: string;
-    icon?: React.ReactElement | string;
-  }[];
-}
-
-export interface UserAnswers {
-  [key: number]: string;
-}
-
-export interface EmailLead {
-    id: string;
-    name: string;
     email: string;
-    quizAnswers: UserAnswers;
-    submittedAt: string;
-    status: 'new' | 'synced' | 'bounced' | 'complaint';
-    ip?: string;
+    name?: string;
+    source: 'google_oauth' | 'manual_entry' | 'quiz_flow';
+    timestamp: string;
+    ip?: string; 
+    device: string;
+    // Tracking Parameters for Attribution
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_content?: string;
+    gclid?: string; // Google Ads Click ID
+    fbclid?: string; // Facebook Click ID
+    status: 'captured' | 'synced' | 'failed';
+    quiz_data?: Record<string, string>; // Store quiz answers
 }
 
-export interface SmtpProfile {
-    id: string;
-    name: string;
-    provider: 'aws' | 'sendgrid' | 'gmail' | 'custom' | 'hostinger' | 'office365' | 'mailgun' | 'webhook';
-    host: string;
-    port: number;
-    username: string;
-    password?: string; // Stored securely
-    fromEmail?: string;
-    encryption: 'ssl' | 'tls' | 'none';
-    status: 'active' | 'paused';
-}
-
+// CPA Offer with rotation rules
 export interface CpaOffer {
     id: string;
     title: string;
-    description: string;
-    instructions?: string; // Step-by-step guide for the detail page
-    payout: string; // Display text e.g. "$2.50" or "Chance to Win"
-    payoutValue?: number; // Numeric value for sorting
-    popularity?: number; // 0-100 score for sorting
-    ctaText: string;
-    url: string; // Your tracking link
-    category: 'sweepstakes' | 'survey' | 'app' | 'finance';
+    url: string;
+    weight: number; 
+    is_active: boolean;
+    description?: string;
+    payout?: string;
+    category?: 'Health' | 'Insurance' | 'Home Services' | 'Software' | 'Shopping' | 'Finance' | 'Research' | 'Gaming' | 'Other';
     imageUrl?: string;
-    isActive: boolean;
+    ctaText?: string;
+    instructions?: string;
+    popularity?: number; // 0-100
 }
 
-export interface SiteContent {
+// Dynamic Website Content Config
+export interface SiteContentConfig {
     hero: {
         headline: string;
         subheadline: string;
         ctaText: string;
+        trustText: string;
     };
-    features: {
-        title: string;
-        subtitle: string;
-        items: Array<{title: string; desc: string}>;
+    quiz: {
+        step1Title: string; // Legacy support
+        step2Title: string; // Legacy support
+        emailTitle: string; // Legacy support
     };
-    testimonials: Array<{
-        name: string;
-        role: string;
-        text: string;
-        location: string;
-    }>;
-    seoSection: {
-        title: string;
-        content: string;
-    };
-    finalCta: {
-        heading: string;
-        subheading: string;
-        buttonText: string;
+    colors: {
+        primary: string; // Hex code
+        secondary: string;
+    }
+}
+
+// Dynamic Quiz Configuration
+export interface QuizOption {
+    id: string;
+    text: string;
+    icon: string;
+}
+
+export interface QuizQuestion {
+    id: string;
+    text: string;
+    subtext: string;
+    options: QuizOption[];
+}
+
+export interface QuizConfig {
+    questions: QuizQuestion[];
+    emailStepTitle: string;
+    emailStepSubtext: string;
+}
+
+// SMTP / Email Configuration
+export interface SmtpConfig {
+    provider: 'sendgrid' | 'mailgun' | 'smtp' | 'none';
+    host: string;
+    port: number;
+    user: string;
+    pass: string;
+    fromEmail: string;
+}
+
+// Version Control
+export interface VersionData {
+    id: string;
+    timestamp: string;
+    note: string;
+    data: {
+        siteContent: SiteContentConfig;
+        offers: CpaOffer[];
+        quizConfig: QuizConfig;
+    }
+}
+
+// App-wide settings managed by admin
+export interface AppConfig {
+    brandName: string;
+    headline: string;
+    // Logic
+    defaultCpaUrl: string; // The fallback URL
+    redirectRule: 'single' | 'rotate' | 'offer_wall'; 
+    // Integrations
+    webhookUrl?: string; // For Make.com / Zapier
+    googleAnalyticsId?: string;
+}
+
+// Analytics for tracking redirects
+export interface AnalyticsLog {
+    redirect_id: string;
+    email: string;
+    offer_id: string;
+    timestamp: string;
+    device: string;
+}
+
+// Global Custom Elements via Module Augmentation
+declare module 'react' {
+    namespace JSX {
+        interface IntrinsicElements {
+            'lottie-player': any;
+        }
     }
 }

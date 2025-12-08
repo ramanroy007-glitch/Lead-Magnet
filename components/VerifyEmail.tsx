@@ -3,9 +3,10 @@ import React from 'react';
 
 interface VerifyEmailProps {
   onNavigate: () => void;
+  onNavigateHome: () => void;
 }
 
-const VerifyEmail: React.FC<VerifyEmailProps> = ({ onNavigate }) => {
+const VerifyEmail: React.FC<VerifyEmailProps> = ({ onNavigate, onNavigateHome }) => {
   return (
     <div className="min-h-screen bg-[#0f1014] flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-[#1a1d29] rounded-2xl border border-white/10 p-8 text-center shadow-2xl animate-fade-in-up">
@@ -30,9 +31,15 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ onNavigate }) => {
              </button>
              <button 
                 onClick={() => alert("Link resent! Check your spam folder.")}
-                className="text-xs text-gray-500 hover:text-white transition-colors uppercase tracking-wider"
+                className="text-xs text-gray-500 hover:text-white transition-colors uppercase tracking-wider block w-full"
              >
                 Resend Link
+             </button>
+         </div>
+
+         <div className="mt-8 pt-6 border-t border-white/5">
+             <button onClick={onNavigateHome} className="text-slate-500 hover:text-white text-sm flex items-center justify-center gap-2 transition-colors mx-auto">
+                 &larr; Back to Home
              </button>
          </div>
       </div>

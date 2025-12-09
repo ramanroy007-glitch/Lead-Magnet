@@ -1,12 +1,5 @@
-import React, { useState, useEffect } from 'react';
 
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'lottie-player': any;
-    }
-  }
-}
+import React, { useState, useEffect } from 'react';
 
 const MESSAGES = [
     "👋 Hi! I'm Nat, your AI rewards assistant.",
@@ -20,7 +13,7 @@ const AiGuide: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [messageIndex, setMessageIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
-    const [showBubble, setShowBubble] = useState(false); // Start hidden for pop effect
+    const [showBubble, setShowBubble] = useState(false);
 
     useEffect(() => {
         // Initial delay for the robot to appear
@@ -48,7 +41,7 @@ const AiGuide: React.FC = () => {
         setTimeout(() => {
             setMessageIndex((prev) => (prev + 1) % MESSAGES.length);
             setShowBubble(true);
-        }, 400); // Wait for exit animation
+        }, 400); 
     };
 
     if (!isVisible) return null;
@@ -56,7 +49,7 @@ const AiGuide: React.FC = () => {
     return (
         <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end pointer-events-none sm:bottom-10 sm:right-10">
             
-            {/* Holographic Speech Bubble - Light Theme Version */}
+            {/* Holographic Speech Bubble */}
             <div 
                 className={`
                     relative mb-4 mr-2 max-w-[240px] pointer-events-auto cursor-pointer
@@ -65,7 +58,7 @@ const AiGuide: React.FC = () => {
                 `}
                 onClick={cycleMessage}
             >
-                <div className="absolute inset-0 bg-white/90 backdrop-blur-xl rounded-2xl rounded-tr-sm shadow-xl shadow-slate-900/10 border border-white"></div>
+                <div className="absolute inset-0 bg-white/95 backdrop-blur-xl rounded-2xl rounded-tr-sm shadow-xl shadow-slate-900/10 border border-slate-100"></div>
                 
                 <div className="relative p-4">
                     <div className="flex items-center gap-2 mb-1">
@@ -80,11 +73,11 @@ const AiGuide: React.FC = () => {
                     </p>
                 </div>
 
-                {/* Glass Arrow */}
-                <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white transform rotate-45 border-r border-b border-slate-100"></div>
+                {/* Triangle Tail */}
+                <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white border-r border-b border-slate-100 transform rotate-45"></div>
             </div>
 
-            {/* Robot Container */}
+            {/* AI Orb Container */}
             <div 
                 className="relative group cursor-pointer pointer-events-auto"
                 onMouseEnter={() => setIsHovered(true)}
@@ -92,18 +85,19 @@ const AiGuide: React.FC = () => {
                 onClick={cycleMessage}
             >
                 {/* 3D Portal Base (Shadow/Glow) */}
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-16 h-4 bg-slate-900/10 rounded-[100%] blur-sm"></div>
+                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-12 h-3 bg-slate-900/10 rounded-[100%] blur-sm"></div>
 
-                {/* Robot Body */}
-                <div className="relative w-20 h-20 sm:w-24 sm:h-24 transition-transform duration-300 ease-out group-hover:-translate-y-2 group-active:scale-95">
-                    <lottie-player
-                        src="https://lottie.host/6e0d3765-5c7d-41ea-9333-876a44558552/G5h8N6f4xW.json"
-                        background="transparent"
-                        speed="1"
-                        style={{ width: '100%', height: '100%' }}
-                        loop
-                        autoplay
-                    ></lottie-player>
+                {/* CSS AI Orb - Reliable & Lightweight */}
+                <div className="relative w-16 h-16 sm:w-20 sm:h-20 transition-transform duration-300 ease-out group-hover:-translate-y-2 group-active:scale-95">
+                    <div className="relative w-full h-full flex items-center justify-center">
+                         {/* Outer Ring */}
+                         <div className="absolute inset-0 border-2 border-dashed border-inbox-orange rounded-full animate-spin-slow opacity-60"></div>
+                         {/* Middle Ring */}
+                         <div className="absolute inset-1 border-2 border-transparent border-r-inbox-green border-l-inbox-green rounded-full animate-spin-reverse opacity-80"></div>
+                         {/* Core */}
+                         <div className="absolute inset-4 bg-gradient-to-br from-inbox-orange to-inbox-purple rounded-full blur-[2px] shadow-neon animate-pulse"></div>
+                         <div className="absolute inset-4 bg-white/20 rounded-full"></div>
+                    </div>
                 </div>
             </div>
 

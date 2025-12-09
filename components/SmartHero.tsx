@@ -1,15 +1,8 @@
+
 import React, { useState } from 'react';
 import type { SmartLead, SiteContentConfig, QuizConfig } from '../types';
 import QuizModal from './QuizModal';
 import MagicBackground from './MagicBackground';
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'lottie-player': any;
-    }
-  }
-}
 
 interface SmartHeroProps {
   onLeadCaptured: (lead: SmartLead) => void;
@@ -50,16 +43,19 @@ const SmartHero: React.FC<SmartHeroProps> = ({ onLeadCaptured, content, quizConf
                             {content.hero.headline}
                         </h1>
                         
-                        {/* Desktop Mascot Decoration */}
-                        <div className="hidden lg:block absolute -top-16 -right-16 w-32 h-32 opacity-90 animate-float pointer-events-none">
-                            <lottie-player
-                                src="https://lottie.host/6e0d3765-5c7d-41ea-9333-876a44558552/G5h8N6f4xW.json"
-                                background="transparent"
-                                speed="1"
-                                style={{ width: '100%', height: '100%' }}
-                                loop
-                                autoplay
-                            ></lottie-player>
+                        {/* Desktop Mascot Decoration - NEW CSS HOLOGRAM */}
+                        <div className="hidden lg:block absolute -top-16 -right-16 w-32 h-32 animate-float pointer-events-none">
+                            <div className="relative w-full h-full flex items-center justify-center">
+                                {/* Outer Ring */}
+                                <div className="absolute inset-0 border-[3px] border-dashed border-inbox-orange/40 rounded-full animate-spin-slow"></div>
+                                {/* Middle Ring */}
+                                <div className="absolute inset-2 border-[3px] border-transparent border-t-inbox-green/60 border-l-inbox-green/60 rounded-full animate-spin-reverse"></div>
+                                {/* Inner Ring */}
+                                <div className="absolute inset-6 border-[2px] border-inbox-purple/50 rounded-full animate-pulse"></div>
+                                {/* Core */}
+                                <div className="absolute inset-10 bg-gradient-to-tr from-inbox-orange to-inbox-purple rounded-full blur-md shadow-neon animate-pulse-subtle"></div>
+                                <div className="absolute inset-10 bg-white/30 rounded-full"></div>
+                            </div>
                         </div>
                     </div>
                     

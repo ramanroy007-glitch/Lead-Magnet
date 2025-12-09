@@ -1,16 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import { saveLead } from '../services/smartCapture';
 import type { SmartLead, QuizConfig } from '../types';
 import EmailWhitelistInstructions from './EmailWhitelistInstructions';
 import { fireConfetti } from '../services/confetti';
-
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'lottie-player': any;
-    }
-  }
-}
 
 interface QuizFlowProps {
   onQuizComplete: (lead: SmartLead) => void;
@@ -205,17 +198,12 @@ const QuizFlow: React.FC<QuizFlowProps> = ({ onQuizComplete, initialEmail, confi
                      <p className="text-slate-500 font-medium text-sm">Matching your profile with premium partners.</p>
                 </div>
                 
-                {/* Lottie Container with Glow */}
-                <div className="w-48 h-48 md:w-64 md:h-64 relative mb-8 z-10">
-                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 bg-blue-400/20 rounded-full blur-[60px] animate-pulse"></div>
-                    <lottie-player
-                        src="https://lottie.host/5f695126-7848-4720-9669-02687108929b/Xk1J7y0YgB.json"
-                        background="transparent"
-                        speed="1"
-                        style={{ width: '100%', height: '100%' }}
-                        loop
-                        autoplay
-                    ></lottie-player>
+                {/* CSS AI Loader - No Lottie */}
+                <div className="relative w-32 h-32 mb-8 z-10 flex items-center justify-center">
+                     <div className="absolute inset-0 border-4 border-blue-100 rounded-full"></div>
+                     <div className="absolute inset-0 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                     <div className="absolute inset-4 border-4 border-purple-400 border-b-transparent rounded-full animate-spin-reverse"></div>
+                     <div className="text-4xl animate-pulse">🤖</div>
                 </div>
 
                 <div className="w-full max-w-xs space-y-2 text-left bg-white/80 p-4 rounded-xl border border-slate-100 shadow-xl relative z-10">

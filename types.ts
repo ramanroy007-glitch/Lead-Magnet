@@ -1,8 +1,9 @@
+
 import React from 'react';
 
 // --- CORE SYSTEM TYPES ---
 
-export type Page = 'home' | 'admin' | 'admin-login' | 'info' | 'offers';
+export type Page = 'home' | 'admin' | 'admin-login' | 'info' | 'offers' | 'verify-email';
 export type UserRole = 'super_admin' | 'employee' | string;
 
 // Main Lead object with tracking
@@ -123,8 +124,9 @@ export interface AnalyticsLog {
     device: string;
 }
 
-// Global Custom Elements via Module Augmentation
-declare module 'react' {
+// Global Declaration for Custom Elements
+// This logic ensures Typescript recognizes the lottie-player element
+declare global {
     namespace JSX {
         interface IntrinsicElements {
             'lottie-player': any;

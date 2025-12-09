@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 
 interface VerifyEmailProps {
   onNavigate: () => void;
@@ -7,6 +7,16 @@ interface VerifyEmailProps {
 }
 
 const VerifyEmail: React.FC<VerifyEmailProps> = ({ onNavigate, onNavigateHome }) => {
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const handleVerify = () => {
+    setIsVerifying(true);
+    // Simulate backend network call
+    setTimeout(() => {
+        onNavigate();
+    }, 1500);
+  };
+
   return (
     <div className="min-h-screen bg-[#0f1014] flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-[#1a1d29] rounded-2xl border border-white/10 p-8 text-center shadow-2xl animate-fade-in-up">
@@ -17,21 +27,28 @@ const VerifyEmail: React.FC<VerifyEmailProps> = ({ onNavigate, onNavigateHome })
             </svg>
          </div>
 
-         <h1 className="text-3xl font-bold text-white mb-4 tracking-tight">Check Your Inbox</h1>
+         <h1 className="text-3xl font-bold text-white mb-4 tracking-tight">One Last Step</h1>
          <p className="text-gray-400 mb-8 leading-relaxed text-sm">
-            We've sent a secure verification link to your email. You must click it to activate your dashboard.
+            Please confirm your email address to unlock your reward dashboard. This ensures you receive your payouts.
          </p>
 
          <div className="space-y-4">
              <button 
-                onClick={onNavigate}
-                className="w-full py-4 bg-brand-primary hover:bg-[#004199] text-white font-bold rounded-lg transition-all uppercase tracking-widest text-sm shadow-lg hover:shadow-brand-primary/50"
+                onClick={handleVerify}
+                disabled={isVerifying}
+                className="w-full py-4 bg-brand-primary hover:bg-[#004199] text-white font-bold rounded-lg transition-all uppercase tracking-widest text-sm shadow-lg hover:shadow-brand-primary/50 flex items-center justify-center gap-2"
              >
-                I Verified My Email
+                {isVerifying ? (
+                    <>
+                        <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin"></div>
+                        Verifying...
+                    </>
+                ) : "Verify & Continue"}
              </button>
+             
              <button 
-                onClick={() => alert("Link resent! Check your spam folder.")}
-                className="text-xs text-gray-500 hover:text-white transition-colors uppercase tracking-wider block w-full"
+                onClick={() => alert("Verification link resent to your email!")}
+                className="text-xs text-gray-500 hover:text-white transition-colors uppercase tracking-wider block w-full pt-2"
              >
                 Resend Link
              </button>

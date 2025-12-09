@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -11,6 +10,7 @@ import OfferWall from './components/OfferWall';
 import InfoPage from './components/InfoPage';
 import LoginModal from './components/LoginModal';
 import AiGuide from './components/AiGuide';
+import VerifyEmail from './components/VerifyEmail';
 import { performRedirect } from './services/redirectEngine';
 import type { SmartLead, CpaOffer, AppConfig, SiteContentConfig, QuizConfig, VersionData } from './types';
 import { DEFAULT_OFFERS, DEFAULT_SITE_CONTENT, DEFAULT_QUIZ_CONFIG } from './constants';
@@ -132,6 +132,9 @@ const App: React.FC = () => {
                 case 'offers':
                     setPage('offers');
                     break;
+                case 'verify-email':
+                    setPage('verify-email');
+                    break;
                 case 'home':
                 default:
                     setPage('home');
@@ -161,7 +164,7 @@ const App: React.FC = () => {
     const handleLeadCaptured = (lead: SmartLead) => {
         setLastLead(lead);
         if (config.redirectRule === 'single') performRedirect(lead);
-        else navigate('offers');
+        else navigate('verify-email'); // Force email verification flow before showing offers
     };
 
     return (
@@ -183,6 +186,7 @@ const App: React.FC = () => {
             {page === 'admin-login' && <AdminLogin onLoginSuccess={handleLoginSuccess} onNavigateHome={() => navigate('home')} />}
             {page === 'info' && infoPageContent && <InfoPage title={infoPageContent.title} onBack={() => navigate('home')}>{infoPageContent.content}</InfoPage>}
             {page === 'offers' && <OfferWall offers={offers} lead={lastLead} onNavigateHome={() => navigate('home')} />}
+            {page === 'verify-email' && <VerifyEmail onNavigate={() => navigate('offers')} onNavigateHome={() => navigate('home')} />}
             
             {page === 'home' && (
                 <>

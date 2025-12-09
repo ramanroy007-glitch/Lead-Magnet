@@ -1,8 +1,15 @@
-
 import React, { useState } from 'react';
 import type { SmartLead, SiteContentConfig, QuizConfig } from '../types';
 import QuizModal from './QuizModal';
 import MagicBackground from './MagicBackground';
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'lottie-player': any;
+    }
+  }
+}
 
 interface SmartHeroProps {
   onLeadCaptured: (lead: SmartLead) => void;

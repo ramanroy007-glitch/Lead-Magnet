@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import type { SmartLead, CpaOffer, SiteContentConfig, QuizConfig, VersionData } from '../types';
 import { generateOfferFromLink, analyzeOfferCompliance } from '../services/gemini';
@@ -247,6 +248,17 @@ echo "------------------------------------------------"
                 {/* --- OVERVIEW --- */}
                 {activeTab === 'overview' && (
                     <div className="max-w-5xl animate-fade-in">
+                        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-8 flex items-start gap-3">
+                             <span className="text-xl">💡</span>
+                             <div>
+                                 <h4 className="font-bold text-blue-900">No Database Setup Required</h4>
+                                 <p className="text-sm text-blue-800">
+                                     This app runs in "Serverless Mode". All data (leads, offers, settings) is stored securely in the browser's Local Storage. 
+                                     You can deploy this site as a static HTML/JS app anywhere (Vercel, Netlify, DigitalOcean) without configuring MySQL or MongoDB.
+                                 </p>
+                             </div>
+                        </div>
+
                         <h2 className="text-3xl font-extrabold text-slate-900 mb-8">System Overview</h2>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                             <StatCard label="Total Leads Captured" value={leads.length} color="text-blue-600" />

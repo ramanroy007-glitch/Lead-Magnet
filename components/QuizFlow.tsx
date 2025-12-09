@@ -1,9 +1,16 @@
-
 import React, { useState, useEffect } from 'react';
 import { saveLead } from '../services/smartCapture';
 import type { SmartLead, QuizConfig } from '../types';
 import EmailWhitelistInstructions from './EmailWhitelistInstructions';
 import { fireConfetti } from '../services/confetti';
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'lottie-player': any;
+    }
+  }
+}
 
 interface QuizFlowProps {
   onQuizComplete: (lead: SmartLead) => void;

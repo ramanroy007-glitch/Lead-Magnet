@@ -1,8 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 
-// TypeScript support for custom element
-// declare global removed as it was ineffective, using @ts-ignore instead
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'lottie-player': any;
+    }
+  }
+}
 
 const MESSAGES = [
     "👋 Hi! I'm Nat, your AI rewards assistant.",

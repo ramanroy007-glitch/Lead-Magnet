@@ -10,7 +10,7 @@ import OfferWall from './components/OfferWall';
 import InfoPage from './components/InfoPage';
 import LoginModal from './components/LoginModal';
 import AiGuide from './components/AiGuide';
-import VerifyEmail from './components/VerifyEmail';
+import LiveNotifications from './components/LiveNotifications';
 import { performRedirect } from './services/redirectEngine';
 import type { SmartLead, CpaOffer, AppConfig, SiteContentConfig, QuizConfig, VersionData } from './types';
 import { DEFAULT_OFFERS, DEFAULT_SITE_CONTENT, DEFAULT_QUIZ_CONFIG } from './constants';
@@ -58,7 +58,6 @@ const App: React.FC = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    // Helper to update content from Admin
     const handleUpdateContent = (newContent: SiteContentConfig) => {
         setSiteContent(newContent);
         localStorage.setItem('site_content', JSON.stringify(newContent));
@@ -109,7 +108,6 @@ const App: React.FC = () => {
 
             setInfoPageContent(null);
 
-            // SECRET ADMIN ROUTE LOGIC
             if (hash === 'admin-secret-natraj-918' || urlParams.get('admin') === 'true') {
                 if (adminSession) setPage('admin');
                 else setPage('admin-login');
@@ -131,9 +129,6 @@ const App: React.FC = () => {
                     break;
                 case 'offers':
                     setPage('offers');
-                    break;
-                case 'verify-email':
-                    setPage('verify-email');
                     break;
                 case 'home':
                 default:
@@ -163,12 +158,16 @@ const App: React.FC = () => {
 
     const handleLeadCaptured = (lead: SmartLead) => {
         setLastLead(lead);
-        if (config.redirectRule === 'single') performRedirect(lead);
-        else navigate('verify-email'); // Force email verification flow before showing offers
+        // CRITICAL CONVERSION FIX: Immediate redirect to offers. No email verify block.
+        if (config.redirectRule === 'single') {
+            performRedirect(lead);
+        } else {
+            navigate('offers');
+        }
     };
 
     return (
-        <div className="font-sans min-h-screen flex flex-col antialiased bg-nat-dark text-nat-white selection:bg-nat-teal selection:text-nat-dark">
+        <div className="font-sans min-h-screen flex flex-col antialiased bg-slate-50 text-slate-900 selection:bg-nat-teal selection:text-nat-dark">
             {page === 'admin' && (
                 <AdminDashboard 
                     onLogout={handleLogout} 
@@ -186,7 +185,6 @@ const App: React.FC = () => {
             {page === 'admin-login' && <AdminLogin onLoginSuccess={handleLoginSuccess} onNavigateHome={() => navigate('home')} />}
             {page === 'info' && infoPageContent && <InfoPage title={infoPageContent.title} onBack={() => navigate('home')}>{infoPageContent.content}</InfoPage>}
             {page === 'offers' && <OfferWall offers={offers} lead={lastLead} onNavigateHome={() => navigate('home')} />}
-            {page === 'verify-email' && <VerifyEmail onNavigate={() => navigate('offers')} onNavigateHome={() => navigate('home')} />}
             
             {page === 'home' && (
                 <>
@@ -197,9 +195,10 @@ const App: React.FC = () => {
                             content={siteContent}
                             quizConfig={quizConfig}
                         />
-                        <HowItWorks />
                         <SocialProof />
+                        <HowItWorks />
                         <AiGuide />
+                        <LiveNotifications />
                     </main>
                     <Footer onNavigate={navigate} />
                     

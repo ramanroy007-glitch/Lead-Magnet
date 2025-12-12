@@ -38,7 +38,7 @@ export interface CpaOffer {
     is_active: boolean;
     description?: string;
     payout?: string;
-    category?: 'Health' | 'Insurance' | 'Home Services' | 'Software' | 'Shopping' | 'Finance' | 'Research' | 'Gaming' | 'Other';
+    category?: 'Health' | 'Insurance' | 'Home Services' | 'Software' | 'Shopping' | 'Finance' | 'Research' | 'Gaming' | 'Apps' | 'Other';
     imageUrl?: string;
     ctaText?: string;
     instructions?: string;

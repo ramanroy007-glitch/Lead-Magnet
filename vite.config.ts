@@ -18,8 +18,12 @@ export default defineConfig({
     chunkSizeWarningLimit: 1600,
     rollupOptions: {
         output: {
-            manualChunks: {
-                vendor: ['react', 'react-dom', '@google/genai'],
+            manualChunks: (id) => {
+                if (id.includes('node_modules')) {
+                    if (id.includes('@google/genai')) return 'genai';
+                    if (id.includes('react')) return 'react';
+                    return 'vendor';
+                }
             }
         }
     }

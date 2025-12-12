@@ -7,12 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
-    <title>Natraj Rewards - Exclusive Rewards & Savings</title>
-    
-    <!-- FONTS: Space Grotesk for Headers, Inter for Body -->
+    <!-- SEO & Core Meta Tags -->
+    <title>Natraj Rewards - Verified Offers & Consumer Rewards</title>
+    <meta name="description" content="Discover verified consumer rewards, paid surveys, and savings opportunities. Check your eligibility for exclusive offers today." />
+    <link rel="canonical" href="https://natraj-rewards.com" /> 
+    <meta name="theme-color" content="#0F172A">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Natraj Rewards - Check Your Eligibility">
+    <meta property="og:description" content="See if you qualify for our latest consumer research and reward programs.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=1200&q=80">
+
+    <!-- FONTS: Inter for a clean, professional look -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -21,38 +31,27 @@
           extend: {
             fontFamily: {
               sans: ['"Inter"', 'sans-serif'],
-              display: ['"Space Grotesk"', 'sans-serif'],
+              display: ['"Inter"', 'sans-serif'],
             },
             colors: {
-              'nat-dark': '#0B0C10',
-              'nat-gray': '#1F2833',
-              'nat-teal': '#66FCF1',
-              'nat-teal-dim': '#45A29E',
-              'nat-white': '#C5C6C7',
-              'brand-primary': '#F36D36',
-            },
-            boxShadow: {
-              'neon': '0 0 20px rgba(102, 252, 241, 0.3)',
-              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+              'brand-dark': '#0F172A',
+              'brand-primary': '#F97316', 
+              'nat-dark': '#0B1120',
+              'nat-teal': '#22D3EE',
+              'nat-white': '#F8FAFC',
             },
             animation: {
-              'float': 'float 6s ease-in-out infinite',
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'orb-breath': 'orbBreath 4s ease-in-out infinite',
-              'scan': 'scan 3s linear infinite',
+              'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+              'float': 'float 6s ease-in-out infinite',
+              'shine': 'shine 2s linear infinite',
             },
             keyframes: {
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-10px)' },
-              },
-              orbBreath: {
-                '0%, 100%': { transform: 'scale(1)', opacity: '0.8' },
-                '50%': { transform: 'scale(1.1)', opacity: '1' },
-              },
-              scan: {
-                '0%': { transform: 'translateY(-100%)' },
-                '100%': { transform: 'translateY(100%)' }
+              fadeInUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+              float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+              shine: {
+                '0%': { 'background-position': '-200% 0' },
+                '100%': { 'background-position': '200% 0' },
               }
             }
           }
@@ -60,15 +59,12 @@
       }
     </script>
     <style>
-      body { background-color: #0B0C10; color: #C5C6C7; }
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
+      body { background-color: #0F172A; color: #F8FAFC; }
+      .glass-panel { 
+        background-color: rgba(30, 41, 59, 0.7); 
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
-      .no-scrollbar::-webkit-scrollbar { display: none; }
-      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
   <script type="importmap">
 {
@@ -83,8 +79,20 @@
 }
 </script>
 </head>
-  <body class="antialiased font-sans bg-nat-dark">
+  <body class="antialiased font-sans">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
+    
+    <!-- Compliance Footer for FB/Google Ads -->
+    <footer class="bg-[#0B1120] text-slate-500 py-8 text-[10px] text-center border-t border-slate-800">
+      <div class="container mx-auto px-4 max-w-4xl">
+        <p class="mb-4">
+          This site is not a part of the Facebook website or Facebook Inc. Additionally, This site is NOT endorsed by Facebook in any way. FACEBOOK is a trademark of FACEBOOK, Inc.
+        </p>
+        <p>
+          DISCLAIMER: All results stated are for illustrative purposes. Your results may vary. We are an independent rewards program and are not affiliated with any of the brands listed unless explicitly stated.
+        </p>
+      </div>
+    </footer>
   </body>
 </html>

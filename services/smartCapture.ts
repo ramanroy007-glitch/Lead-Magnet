@@ -20,50 +20,6 @@ const getUtmParams = () => {
     };
 };
 
-/**
- * Rotates SMTP servers based on availability and daily limits.
- * Resets limits if the day has changed.
- * Increments usage for the selected server.
- */
-export const rotateSmtpServers = (): SmtpProfile | null => {
-    try {
-        const profiles: SmtpProfile[] = JSON.parse(localStorage.getItem('smtp_profiles') || '[]');
-        if (profiles.length === 0) return null;
-
-        const today = new Date().toISOString().split('T')[0];
-        let profilesChanged = false;
-
-        // 1. Daily Reset Check
-        profiles.forEach(p => {
-            if (p.lastResetDate !== today) {
-                p.currentUsage = 0;
-                p.lastResetDate = today;
-                profilesChanged = true;
-            }
-        });
-
-        // 2. Find Available Server (Simple Strategy: First Active with Capacity)
-        const activeProfile = profiles.find(p => p.isActive && p.currentUsage < p.dailyLimit);
-
-        if (activeProfile) {
-            activeProfile.currentUsage++;
-            profilesChanged = true;
-        } else {
-            console.warn("No available SMTP servers: All limits reached or inactive.");
-        }
-
-        if (profilesChanged) {
-            localStorage.setItem('smtp_profiles', JSON.stringify(profiles));
-        }
-
-        return activeProfile || null;
-
-    } catch (error) {
-        console.error("SMTP Rotation Error", error);
-        return null;
-    }
-};
-
 export const saveLead = async (
     email: string, 
     source: SmartLead['source'],
@@ -81,29 +37,16 @@ export const saveLead = async (
         status: 'captured'
     };
 
-    // 1. Local Persistence (Backup)
+    // 1. Local Persistence (Browser Backup)
     try {
         const existingLeads: SmartLead[] = JSON.parse(localStorage.getItem('smart_leads') || '[]');
-        // Dedupe check
         if (!existingLeads.some(l => l.email.toLowerCase() === email.toLowerCase())) {
             existingLeads.push(lead);
             localStorage.setItem('smart_leads', JSON.stringify(existingLeads));
         }
-    } catch (e) {
-        console.error("Local storage failed", e);
-    }
+    } catch (e) { console.error("Local storage failed", e); }
 
-    // 2. Data Layer Push (GA4 / GTM)
-    if (window.dataLayer) {
-        window.dataLayer.push({
-            'event': 'lead_capture',
-            'lead_id': lead.id,
-            'user_email_hash': 'sha256_placeholder', // Should hash in real app
-            'source': source
-        });
-    }
-
-    // 3. Webhook Integration (NEXT GEN CONNECTIVITY)
+    // 2. Webhook Integration (The "Coolify/n8n/Zapier" Connector)
     try {
         const integrations: Integration[] = JSON.parse(localStorage.getItem('integrations') || '[]');
         const activeIntegrations = integrations.filter(i => i.isActive);
@@ -112,42 +55,38 @@ export const saveLead = async (
             const payload = JSON.stringify({
                 event: "lead_captured",
                 lead: lead,
-                meta: {
-                    user_agent: navigator.userAgent,
-                    referrer: document.referrer
-                }
+                timestamp: new Date().toISOString(),
+                meta: { user_agent: navigator.userAgent, referrer: document.referrer }
             });
             
-            // Blast to all configured endpoints
-            activeIntegrations.forEach(int => {
+            // We use Promise.allSettled to ensure one failure doesn't block others
+            await Promise.allSettled(activeIntegrations.map(async (int) => {
                 if (!int.webhookUrl) return;
-
-                // Use Beacon for reliability on page unload/redirects
-                const blob = new Blob([payload], { type: 'application/json' });
-                const beaconSent = navigator.sendBeacon(int.webhookUrl, blob);
-
-                if (!beaconSent) {
-                    fetch(int.webhookUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: payload,
-                        keepalive: true
-                    }).catch(err => console.error(`Webhook to ${int.name} failed`, err));
-                } else {
-                    console.log(`Lead sent to ${int.name}`);
+                
+                try {
+                    // Fetch with keepalive is standard for modern analytics/tracking
+                    const response = await fetch(int.webhookUrl, { 
+                        method: 'POST', 
+                        body: payload, 
+                        keepalive: true, // Crucial: ensures request completes even if page unloads
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        } 
+                    });
+                    
+                    if (response.ok) {
+                         console.log(`✅ Lead synced to ${int.name}`);
+                    } else {
+                         console.warn(`⚠️ Webhook error ${int.name}: ${response.status}`);
+                    }
+                } catch (e) {
+                    console.error(`❌ Connection failed to ${int.name}`, e);
                 }
-            });
+            }));
         }
     } catch (e) {
-        console.error("Integration logic failed", e);
-    }
-
-    // 4. SMTP Rotation (Backend Simulation)
-    // We call this to increment the counters and simulate sending an email.
-    // In a real backend, this would return the credentials to use for nodemailer.
-    const selectedSmtp = rotateSmtpServers();
-    if (selectedSmtp) {
-        console.log(`[System] Lead confirmation email queued via: ${selectedSmtp.name}`);
+        console.error("Integration logic error", e);
     }
 
     return lead;

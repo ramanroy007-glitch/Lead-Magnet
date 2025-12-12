@@ -1,29 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import Header from './components/Header';
-import Footer from './components/Footer';
+
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
-import HowItWorks from './components/HowItWorks';
-import SocialProof from './components/SocialProof';
 import SmartHero from './components/SmartHero';
 import OfferWall from './components/OfferWall';
-import InfoPage from './components/InfoPage';
 import LoginModal from './components/LoginModal';
-import AiGuide from './components/AiGuide';
+import MinimalHeader from './components/MinimalHeader';
+import MinimalFooter from './components/MinimalFooter';
+import InfoPage from './components/InfoPage';
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfService from './components/TermsOfService';
 import LiveNotifications from './components/LiveNotifications';
+import AiGuide from './components/AiGuide';
+import MagicBackground from './components/MagicBackground';
+import SeoContent from './components/SeoContent';
+import SocialProof from './components/SocialProof';
+import HowItWorks from './components/HowItWorks';
 import { performRedirect } from './services/redirectEngine';
 import type { SmartLead, CpaOffer, AppConfig, SiteContentConfig, QuizConfig, VersionData } from './types';
 import { DEFAULT_OFFERS, DEFAULT_SITE_CONTENT, DEFAULT_QUIZ_CONFIG } from './constants';
+import { generateSeoContent } from './services/gemini';
+
+const QuizModal = lazy(() => import('./components/QuizModal'));
+
+// Premium Loading Spinner Component
+const FullScreenLoader = () => (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-nat-dark/80 backdrop-blur-md">
+        <div className="relative w-16 h-16 mb-4">
+            <div className="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
+            <div className="absolute inset-0 border-4 border-t-nat-teal border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
+        </div>
+        <p className="text-nat-teal font-bold tracking-widest text-xs uppercase animate-pulse">Loading Experience</p>
+    </div>
+);
 
 const App: React.FC = () => {
     const [page, setPage] = useState<string>('home');
-    const [infoPageContent, setInfoPageContent] = useState<{ title: string; content: React.ReactNode } | null>(null);
     const [lastLead, setLastLead] = useState<SmartLead | null>(null);
     const [offers, setOffers] = useState<CpaOffer[]>(DEFAULT_OFFERS);
     const [siteContent, setSiteContent] = useState<SiteContentConfig>(DEFAULT_SITE_CONTENT);
     const [quizConfig, setQuizConfig] = useState<QuizConfig>(DEFAULT_QUIZ_CONFIG);
     const [versionHistory, setVersionHistory] = useState<VersionData[]>([]);
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+    const [isQuizOpen, setIsQuizOpen] = useState(false);
+    const [seoContent, setSeoContent] = useState({ title: 'Loading AI Content...', content: 'Please wait while our intelligent system prepares your information.'});
     
     const [config, setConfig] = useState<AppConfig>({ 
         brandName: 'Natraj Rewards', 
@@ -33,29 +53,23 @@ const App: React.FC = () => {
     });
 
     useEffect(() => {
+        const fetchAiContent = async () => {
+            const content = await generateSeoContent();
+            setSeoContent(content);
+        };
+
+        fetchAiContent();
+        
         const savedOffers = localStorage.getItem('cpa_offers');
         if (savedOffers) setOffers(JSON.parse(savedOffers));
-        
         const savedConfig = localStorage.getItem('app_config');
         if (savedConfig) setConfig(JSON.parse(savedConfig));
-
         const savedContent = localStorage.getItem('site_content');
         if (savedContent) setSiteContent(JSON.parse(savedContent));
-
         const savedQuiz = localStorage.getItem('quiz_config');
         if (savedQuiz) setQuizConfig(JSON.parse(savedQuiz));
-
         const savedVersions = localStorage.getItem('version_history');
         if (savedVersions) setVersionHistory(JSON.parse(savedVersions));
-
-        // Magical Admin Access: Ctrl + Shift + A
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                window.location.hash = '#/admin-secret-natraj-918';
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
     const handleUpdateContent = (newContent: SiteContentConfig) => {
@@ -78,62 +92,30 @@ const App: React.FC = () => {
             id: crypto.randomUUID(),
             timestamp: new Date().toISOString(),
             note,
-            data: {
-                siteContent: siteContent,
-                offers: offers,
-                quizConfig: quizConfig
-            }
+            data: { siteContent, offers, quizConfig }
         };
-        const updatedHistory = [newVersion, ...versionHistory].slice(0, 10); // Keep last 10
+        const updatedHistory = [newVersion, ...versionHistory].slice(0, 10);
         setVersionHistory(updatedHistory);
         localStorage.setItem('version_history', JSON.stringify(updatedHistory));
     };
 
     const handleRestoreVersion = (version: VersionData) => {
-        if(confirm(`Restore version from ${new Date(version.timestamp).toLocaleString()}? Current unsaved changes will be lost.`)) {
+        if(confirm(`Restore version from ${new Date(version.timestamp).toLocaleString()}?`)) {
             setSiteContent(version.data.siteContent);
             setOffers(version.data.offers);
             setQuizConfig(version.data.quizConfig);
-            localStorage.setItem('site_content', JSON.stringify(version.data.siteContent));
-            localStorage.setItem('cpa_offers', JSON.stringify(version.data.offers));
-            localStorage.setItem('quiz_config', JSON.stringify(version.data.quizConfig));
         }
     };
-
+    
     useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash.replace('#/', '').toLowerCase();
             const adminSession = localStorage.getItem('admin_session') === 'true';
-            const urlParams = new URLSearchParams(window.location.search);
 
-            setInfoPageContent(null);
-
-            if (hash === 'admin-secret-natraj-918' || urlParams.get('admin') === 'true') {
-                if (adminSession) setPage('admin');
-                else setPage('admin-login');
-                return;
-            }
-
-            switch (hash) {
-                case 'privacy':
-                    setPage('info');
-                    setInfoPageContent({ title: 'Privacy Policy', content: <p>We value your privacy. Your data is used for matching purposes only.</p> });
-                    break;
-                case 'terms':
-                    setPage('info');
-                    setInfoPageContent({ title: 'Terms of Service', content: <p>Usage of this platform constitutes agreement to our reward policies.</p> });
-                    break;
-                case 'contact':
-                    setPage('info');
-                    setInfoPageContent({ title: 'Support', content: <p>Contact us at help@natrajrewards.com</p> });
-                    break;
-                case 'offers':
-                    setPage('offers');
-                    break;
-                case 'home':
-                default:
-                    setPage('home');
-                    break;
+            if (hash === 'admin') {
+                setPage(adminSession ? 'admin' : 'admin-login');
+            } else {
+                setPage(hash || 'home');
             }
         };
 
@@ -143,12 +125,12 @@ const App: React.FC = () => {
     }, []);
 
     const navigate = (targetPage: string) => {
-        window.location.hash = targetPage === 'admin-login' ? '#/admin-secret-natraj-918' : `#/${targetPage}`;
+        window.location.hash = `#/${targetPage}`;
     };
 
     const handleLoginSuccess = () => {
         localStorage.setItem('admin_session', 'true');
-        setPage('admin');
+        navigate('admin');
     };
 
     const handleLogout = () => {
@@ -157,8 +139,9 @@ const App: React.FC = () => {
     };
 
     const handleLeadCaptured = (lead: SmartLead) => {
+        setIsQuizOpen(false);
         setLastLead(lead);
-        // CRITICAL CONVERSION FIX: Immediate redirect to offers. No email verify block.
+        sessionStorage.setItem('new_signup', 'true'); // Flag for Welcome Modal
         if (config.redirectRule === 'single') {
             performRedirect(lead);
         } else {
@@ -166,52 +149,60 @@ const App: React.FC = () => {
         }
     };
 
+    const handleStartSignup = () => setIsQuizOpen(true);
+    
+    const isModalOpen = isQuizOpen || isLoginModalOpen;
+
+    const renderPage = () => {
+        switch(page) {
+            case 'admin':
+                return <AdminDashboard onLogout={handleLogout} currentOffers={offers} onUpdateOffers={handleUpdateOffers} currentContent={siteContent} onUpdateContent={handleUpdateContent} currentQuizConfig={quizConfig} onUpdateQuizConfig={handleUpdateQuizConfig} versionHistory={versionHistory} onSaveVersion={handleSaveVersion} onRestoreVersion={handleRestoreVersion} />;
+            case 'admin-login':
+                return <AdminLogin onLoginSuccess={handleLoginSuccess} onNavigateHome={() => navigate('home')} />;
+            case 'offers':
+                return <OfferWall offers={offers} lead={lastLead} onNavigateHome={() => navigate('home')} />;
+            case 'privacy':
+                return <InfoPage title="Privacy Policy" onBack={() => navigate('home')}><PrivacyPolicy /></InfoPage>;
+            case 'terms':
+                 return <InfoPage title="Terms of Service" onBack={() => navigate('home')}><TermsOfService /></InfoPage>;
+            case 'home':
+            default:
+                return (
+                    <>
+                        <div className={`transition-all duration-500 ${isModalOpen ? 'blur-md' : ''}`}>
+                            <MagicBackground />
+                            <div className="relative z-10">
+                                <MinimalHeader />
+                                <main>
+                                    <SmartHero onStartQuiz={handleStartSignup} content={siteContent} />
+                                    <SocialProof />
+                                    <HowItWorks />
+                                    <SeoContent content={seoContent} />
+                                </main>
+                                <MinimalFooter onNavigate={navigate}/>
+                                <LiveNotifications />
+                                <AiGuide onStartQuiz={handleStartSignup} />
+                            </div>
+                        </div>
+                        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginComplete={() => { setIsLoginModalOpen(false); navigate('offers'); }} />
+                         <Suspense fallback={<FullScreenLoader />}>
+                            {isQuizOpen && (
+                                <QuizModal 
+                                    isOpen={isQuizOpen} 
+                                    onClose={() => setIsQuizOpen(false)} 
+                                    onQuizComplete={handleLeadCaptured}
+                                    config={quizConfig}
+                                />
+                            )}
+                        </Suspense>
+                    </>
+                );
+        }
+    };
+
     return (
-        <div className="font-sans min-h-screen flex flex-col antialiased bg-slate-50 text-slate-900 selection:bg-nat-teal selection:text-nat-dark">
-            {page === 'admin' && (
-                <AdminDashboard 
-                    onLogout={handleLogout} 
-                    currentOffers={offers}
-                    onUpdateOffers={handleUpdateOffers}
-                    currentContent={siteContent}
-                    onUpdateContent={handleUpdateContent}
-                    currentQuizConfig={quizConfig}
-                    onUpdateQuizConfig={handleUpdateQuizConfig}
-                    versionHistory={versionHistory}
-                    onSaveVersion={handleSaveVersion}
-                    onRestoreVersion={handleRestoreVersion}
-                />
-            )}
-            {page === 'admin-login' && <AdminLogin onLoginSuccess={handleLoginSuccess} onNavigateHome={() => navigate('home')} />}
-            {page === 'info' && infoPageContent && <InfoPage title={infoPageContent.title} onBack={() => navigate('home')}>{infoPageContent.content}</InfoPage>}
-            {page === 'offers' && <OfferWall offers={offers} lead={lastLead} onNavigateHome={() => navigate('home')} />}
-            
-            {page === 'home' && (
-                <>
-                    <Header onOpenLogin={() => setIsLoginModalOpen(true)} />
-                    <main>
-                        <SmartHero 
-                            onLeadCaptured={handleLeadCaptured} 
-                            content={siteContent}
-                            quizConfig={quizConfig}
-                        />
-                        <SocialProof />
-                        <HowItWorks />
-                        <AiGuide />
-                        <LiveNotifications />
-                    </main>
-                    <Footer onNavigate={navigate} />
-                    
-                    <LoginModal 
-                        isOpen={isLoginModalOpen} 
-                        onClose={() => setIsLoginModalOpen(false)}
-                        onLoginComplete={() => {
-                            setIsLoginModalOpen(false);
-                            navigate('offers');
-                        }}
-                    />
-                </>
-            )}
+        <div className="font-sans min-h-screen flex flex-col antialiased bg-nat-dark text-nat-white">
+            {renderPage()}
         </div>
     );
 };

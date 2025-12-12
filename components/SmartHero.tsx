@@ -1,130 +1,126 @@
-import React, { useState } from 'react';
-import type { SmartLead, SiteContentConfig, QuizConfig } from '../types';
-import QuizModal from './QuizModal';
+
+import React, { useState, useEffect } from 'react';
+import type { SiteContentConfig } from '../types';
 
 interface SmartHeroProps {
-  onLeadCaptured: (lead: SmartLead) => void;
+  onStartQuiz: () => void;
   content: SiteContentConfig;
-  quizConfig: QuizConfig;
 }
 
-const SmartHero: React.FC<SmartHeroProps> = ({ onLeadCaptured, content, quizConfig }) => {
-    const [isQuizOpen, setIsQuizOpen] = useState(false);
-    const [email, setEmail] = useState('');
+const TEXT_ROTATION = ["Real Rewards", "PayPal Cash", "Gift Cards", "Crypto"];
 
-    const handleInitialSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsQuizOpen(true);
-    };
+const SmartHero: React.FC<SmartHeroProps> = ({ onStartQuiz, content }) => {
+    const [textIndex, setTextIndex] = useState(0);
+    const [displayedText, setDisplayedText] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [imgError, setImgError] = useState(false);
+    const [imgLoaded, setImgLoaded] = useState(false);
+
+    useEffect(() => {
+        const currentWord = TEXT_ROTATION[textIndex];
+        const typeSpeed = isDeleting ? 50 : 100;
+
+        const timer = setTimeout(() => {
+            if (!isDeleting && displayedText === currentWord) {
+                setTimeout(() => setIsDeleting(true), 2000);
+            } else if (isDeleting && displayedText === '') {
+                setIsDeleting(false);
+                setTextIndex((prev) => (prev + 1) % TEXT_ROTATION.length);
+            } else {
+                setDisplayedText(prev => 
+                    isDeleting ? prev.slice(0, -1) : currentWord.slice(0, prev.length + 1)
+                );
+            }
+        }, typeSpeed);
+
+        return () => clearTimeout(timer);
+    }, [displayedText, isDeleting, textIndex]);
 
     return (
-        <section className="relative w-full min-h-[90vh] flex flex-col justify-center overflow-hidden bg-slate-50 pt-24 pb-12">
-            
-            {/* Background Blobs - Subtler */}
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-100/50 rounded-full blur-[120px] pointer-events-none translate-x-1/3 -translate-y-1/3"></div>
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-green-100/50 rounded-full blur-[120px] pointer-events-none -translate-x-1/3 translate-y-1/3"></div>
-
-            <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
+        <section className="w-full relative pt-24 pb-12 lg:pt-32 lg:pb-24 overflow-hidden">
+            <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
                     
-                    {/* LEFT: Copy */}
-                    <div className="flex-1 text-center lg:text-left">
-                        
-                        {/* Trust Badge */}
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-slate-200 shadow-sm mb-8 animate-fade-in-up">
-                             <span className="flex h-2 w-2 relative">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                             </span>
-                             <span className="text-xs font-bold text-slate-600 uppercase tracking-widest font-display">
-                                412 Rewards Claimed Today
-                             </span>
+                    {/* LEFT: Content */}
+                    <div className="w-full lg:w-1/2 text-center lg:text-left order-1 flex flex-col items-center lg:items-start">
+                        <div className="inline-flex items-center gap-2 bg-nat-teal/10 border border-nat-teal/20 text-nat-teal text-[10px] sm:text-xs font-bold px-4 py-1.5 rounded-full mb-8 animate-fade-in-up">
+                            <span className="w-2 h-2 rounded-full bg-nat-teal animate-pulse"></span>
+                            OFFICIAL REWARD PROGRAM 2024
                         </div>
-
-                        <h1 className="text-5xl md:text-7xl font-display font-black text-slate-900 leading-[1.1] mb-6 tracking-tight animate-fade-in-up" style={{animationDelay: '100ms'}}>
-                            Get Paid for <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-nat-teal">
-                                Your Opinion.
+                       
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6 animate-fade-in-up max-w-2xl" style={{animationDelay: '100ms'}}>
+                            Start Earning <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-nat-teal to-blue-500 relative inline-block min-h-[1.2em]">
+                                {displayedText}
+                                <span className="text-nat-teal animate-pulse ml-1">|</span>
                             </span>
                         </h1>
-                        
-                        <p className="text-lg md:text-xl text-slate-500 mb-10 font-medium leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-fade-in-up" style={{animationDelay: '200ms'}}>
-                            {content.hero.subheadline} Connect with top brands like Amazon, Netflix, and Walmart.
+                         
+                        <p className="text-base sm:text-lg text-slate-400 mb-10 max-w-lg mx-auto lg:mx-0 leading-relaxed animate-fade-in-up" style={{animationDelay: '200ms'}}>
+                            Stop wasting time on low-paying sites. Our AI instantly matches you with premium surveys and offers you actually qualify for.
                         </p>
                         
-                        {/* Stats Row - Clean */}
-                        <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-8 animate-fade-in-up" style={{animationDelay: '300ms'}}>
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-xl">💰</div>
-                                <div className="text-left">
-                                    <p className="text-lg font-bold text-slate-900">$500+</p>
-                                    <p className="text-xs text-slate-500 font-bold uppercase">Avg. Earnings</p>
-                                </div>
-                            </div>
-                            <div className="w-px h-10 bg-slate-200"></div>
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-xl">⚡</div>
-                                <div className="text-left">
-                                    <p className="text-lg font-bold text-slate-900">Instant</p>
-                                    <p className="text-xs text-slate-500 font-bold uppercase">Payouts</p>
-                                </div>
+                        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center lg:justify-start animate-fade-in-up" style={{animationDelay: '300ms'}}>
+                             <button
+                                onClick={onStartQuiz}
+                                className="relative w-full sm:w-auto px-8 py-4 bg-nat-teal hover:bg-nat-teal-dim text-nat-dark font-black text-lg rounded-xl shadow-lg shadow-cyan-500/20 transition-all transform hover:scale-105 active:scale-95 overflow-hidden group"
+                            >
+                                <span className="relative z-10 flex items-center justify-center gap-2">
+                                    CHECK ELIGIBILITY
+                                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
+                                </span>
+                            </button>
+                            <div className="flex items-center justify-center gap-3 text-sm text-slate-400 font-medium px-4 mt-2 sm:mt-0">
+                                <span className="flex -space-x-3">
+                                    <div className="w-9 h-9 rounded-full bg-slate-700 border-2 border-slate-900 bg-cover shadow-md" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=64&q=80)'}}></div>
+                                    <div className="w-9 h-9 rounded-full bg-slate-600 border-2 border-slate-900 bg-cover shadow-md" style={{backgroundImage: 'url(https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=64&q=80)'}}></div>
+                                    <div className="w-9 h-9 rounded-full bg-slate-800 border-2 border-slate-900 flex items-center justify-center text-[10px] text-white font-bold shadow-md">+2k</div>
+                                </span>
+                                <span className="whitespace-nowrap">Joined Today</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* RIGHT: Floating Card */}
-                    <div className="w-full max-w-md animate-fade-in-up" style={{animationDelay: '400ms'}}>
-                        <div className="bg-white rounded-3xl p-8 relative overflow-hidden shadow-2xl border border-slate-100">
+                    {/* RIGHT: Image */}
+                    <div className="w-full lg:w-1/2 relative order-2 animate-fade-in-up mt-8 lg:mt-0" style={{animationDelay: '400ms'}}>
+                         <div className="relative w-full max-w-sm lg:max-w-md mx-auto aspect-square lg:aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border border-white/10 group bg-slate-800">
+                            {/* Overlay Gradient */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-nat-dark/80 via-transparent to-transparent z-10"></div>
                             
-                            <div className="text-center mb-8">
-                                <h3 className="text-2xl font-display font-black text-slate-900 mb-2">Check Eligibility</h3>
-                                <p className="text-slate-500 text-sm">See if you qualify for current rewards.</p>
-                            </div>
-
-                            <form onSubmit={handleInitialSubmit} className="space-y-4">
-                                <div>
-                                    <input 
-                                        type="email" 
-                                        required
-                                        placeholder="Enter email address..." 
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full bg-slate-50 border-2 border-slate-200 rounded-xl px-5 py-4 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-nat-teal focus:ring-4 focus:ring-nat-teal/10 transition-all font-medium"
-                                    />
+                            {/* Safe Image Loading Logic */}
+                            <img 
+                                src={imgError 
+                                    ? "https://images.unsplash.com/photo-1616077168079-7e09a677fb2c?auto=format&fit=crop&w=800&q=80" // Backup: Mobile Phone in Hand
+                                    : "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=800&q=80" // Primary: Payments Screen
+                                }
+                                onError={() => setImgError(true)}
+                                onLoad={() => setImgLoaded(true)}
+                                alt="Mobile payment success screen" 
+                                className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+                                loading="eager"
+                            />
+                            
+                            {/* Floating Social Proof UI */}
+                            <div className="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-xl animate-float z-20">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                                        <span className="text-white font-bold text-sm">Payout Processed</span>
+                                    </div>
+                                    <span className="text-green-400 font-mono font-bold">$125.00</span>
                                 </div>
-
-                                <button 
-                                    type="submit" 
-                                    className="w-full py-4 bg-nat-teal hover:bg-nat-teal-dim text-nat-dark font-black text-lg rounded-xl transition-all transform hover:-translate-y-1 shadow-lg hover:shadow-nat-teal/30"
-                                >
-                                    Start Earning Now
-                                </button>
-                            </form>
-
-                            <div className="mt-6 pt-6 border-t border-slate-100 text-center">
-                                <div className="flex justify-center gap-4 opacity-50 grayscale hover:grayscale-0 transition-all">
-                                    <span className="font-bold text-slate-400 text-xs">Partnered with:</span>
-                                    <span className="font-bold text-slate-600 text-xs">Target</span>
-                                    <span className="font-bold text-slate-600 text-xs">Starbucks</span>
-                                    <span className="font-bold text-slate-600 text-xs">Amazon</span>
+                                <div className="w-full h-1 bg-white/20 rounded-full overflow-hidden">
+                                    <div className="w-full h-full bg-green-400 rounded-full"></div>
                                 </div>
                             </div>
                         </div>
+                        
+                        {/* Background Glow */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-nat-teal/20 blur-[80px] -z-10 rounded-full opacity-40"></div>
                     </div>
 
                 </div>
             </div>
-
-            <QuizModal 
-                isOpen={isQuizOpen} 
-                onClose={() => setIsQuizOpen(false)} 
-                onQuizComplete={(lead) => {
-                    setIsQuizOpen(false);
-                    onLeadCaptured(lead);
-                }}
-                initialEmail={email}
-                config={quizConfig}
-            />
         </section>
     );
 };

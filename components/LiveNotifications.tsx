@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 
 const NOTIFICATIONS = [
@@ -36,17 +37,17 @@ const LiveNotifications: React.FC = () => {
     if (!current) return null;
 
     return (
-        <div className={`fixed bottom-6 left-6 z-50 transition-all duration-500 transform ${visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'}`}>
-            <div className="bg-white rounded-full shadow-2xl border border-slate-100 p-2 pr-6 flex items-center gap-3 max-w-sm">
-                <div className={`w-10 h-10 rounded-full ${current.bg} flex items-center justify-center text-xl shadow-inner`}>
+        <div className={`fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-50 transition-all duration-500 transform ${visible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0 pointer-events-none'}`}>
+            <div className="bg-white rounded-full shadow-2xl border border-slate-100 p-2 pr-6 flex items-center gap-3 max-w-[calc(100vw-2rem)] sm:max-w-sm">
+                <div className={`w-10 h-10 rounded-full ${current.bg} flex items-center justify-center text-xl shadow-inner shrink-0`}>
                     {current.icon}
                 </div>
-                <div>
-                    <p className="text-sm font-bold text-slate-800 leading-none mb-1">
+                <div className="min-w-0">
+                    <p className="text-sm font-bold text-slate-800 leading-none mb-1 truncate">
                         {current.name}
                     </p>
-                    <p className="text-xs text-slate-500 font-medium">
-                        {current.action} <span className="text-slate-300">•</span> <span className="text-green-500">Just now</span>
+                    <p className="text-xs text-slate-500 font-medium truncate">
+                        {current.action} <span className="text-slate-300 mx-1">•</span> <span className="text-green-500">Just now</span>
                     </p>
                 </div>
             </div>

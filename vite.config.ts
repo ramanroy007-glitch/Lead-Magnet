@@ -6,8 +6,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // CRITICAL: ./ ensures assets are loaded relatively (e.g. assets/style.css)
-  // This allows the site to work on any domain or subdirectory without configuration.
   base: './', 
+  // CRITICAL: Fix "process is not defined" error in browser
+  define: {
+    'process.env.API_KEY': JSON.stringify(process.env.API_KEY || ''),
+    'process.env': {} 
+  },
   server: {
     host: true,
     port: 5173,

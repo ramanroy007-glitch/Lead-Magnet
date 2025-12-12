@@ -18,7 +18,7 @@
     <meta property="og:description" content="See if you qualify for our latest consumer research and reward programs.">
     <meta property="og:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=1200&q=80">
 
-    <!-- FONTS: Inter for a clean, professional look -->
+    <!-- FONTS -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -65,15 +65,16 @@
         border: 1px solid rgba(255, 255, 255, 0.1);
       }
     </style>
-  <script type="importmap">
+    <!-- REMOVED CONFLICTING IMPORTMAP - VITE WILL HANDLE BUNDLING -->
+<script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.1/",
-    "react": "https://aistudiocdn.com/react@^19.2.1",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0",
-    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1",
-    "vite": "https://aistudiocdn.com/vite@^7.2.6",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.33.0",
+    "@vitejs/plugin-react": "https://esm.sh/@vitejs/plugin-react@^5.1.2",
+    "vite": "https://esm.sh/vite@^7.2.7"
   }
 }
 </script>
@@ -83,7 +84,7 @@
     <!-- Vite handles src="./index.tsx" automatically -->
     <script type="module" src="./index.tsx"></script>
     
-    <!-- Compliance Footer for FB/Google Ads -->
+    <!-- Compliance Footer -->
     <footer class="bg-[#0B1120] text-slate-500 py-8 text-[10px] text-center border-t border-slate-800">
       <div class="container mx-auto px-4 max-w-4xl">
         <p class="mb-4">

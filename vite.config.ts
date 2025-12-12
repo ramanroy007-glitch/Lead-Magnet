@@ -5,7 +5,9 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './', // CRITICAL: Ensures all assets use relative paths (assets/style.css) instead of absolute (/assets/style.css)
+  // CRITICAL: ./ ensures assets are loaded relatively (e.g. assets/style.css)
+  // This allows the site to work on any domain or subdirectory without configuration.
+  base: './', 
   server: {
     host: true,
     port: 5173,
@@ -22,7 +24,6 @@ export default defineConfig({
         output: {
             manualChunks: (id) => {
                 if (id.includes('node_modules')) {
-                    if (id.includes('@google/genai')) return 'genai';
                     if (id.includes('react')) return 'react';
                     return 'vendor';
                 }

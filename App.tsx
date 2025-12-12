@@ -23,6 +23,17 @@ import { generateSeoContent } from './services/gemini';
 
 const QuizModal = lazy(() => import('./components/QuizModal'));
 
+// Helper for safe parsing
+const safeParse = <T,>(key: string, fallback: T): T => {
+    try {
+        const item = localStorage.getItem(key);
+        return item ? JSON.parse(item) : fallback;
+    } catch (e) {
+        console.warn(`Failed to parse ${key}, using fallback`, e);
+        return fallback;
+    }
+};
+
 // Premium Loading Spinner Component
 const FullScreenLoader = () => (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-nat-dark/80 backdrop-blur-md">
@@ -60,16 +71,13 @@ const App: React.FC = () => {
 
         fetchAiContent();
         
-        const savedOffers = localStorage.getItem('cpa_offers');
-        if (savedOffers) setOffers(JSON.parse(savedOffers));
-        const savedConfig = localStorage.getItem('app_config');
-        if (savedConfig) setConfig(JSON.parse(savedConfig));
-        const savedContent = localStorage.getItem('site_content');
-        if (savedContent) setSiteContent(JSON.parse(savedContent));
-        const savedQuiz = localStorage.getItem('quiz_config');
-        if (savedQuiz) setQuizConfig(JSON.parse(savedQuiz));
-        const savedVersions = localStorage.getItem('version_history');
-        if (savedVersions) setVersionHistory(JSON.parse(savedVersions));
+        // Safe loading of data
+        setOffers(safeParse('cpa_offers', DEFAULT_OFFERS));
+        setSiteContent(safeParse('site_content', DEFAULT_SITE_CONTENT));
+        setQuizConfig(safeParse('quiz_config', DEFAULT_QUIZ_CONFIG));
+        setVersionHistory(safeParse('version_history', []));
+        setConfig(prev => ({ ...prev, ...safeParse('app_config', {}) }));
+
     }, []);
 
     const handleUpdateContent = (newContent: SiteContentConfig) => {

@@ -4,17 +4,15 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     
-    <title>Natraj Rewards - Sweepstakes, Surveys & Deals</title>
-    <meta name="title" content="Natraj Rewards - Exclusive Rewards & Savings">
-    <meta name="description" content="Discover verified sweepstakes, paid survey opportunities, and exclusive discount offers. Join our free rewards community today.">
-    <meta name="robots" content="index, follow">
+    <title>Natraj Rewards - Exclusive Rewards & Savings</title>
     
+    <!-- FONTS: Space Grotesk for Headers, Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -22,84 +20,39 @@
         theme: {
           extend: {
             fontFamily: {
-              sans: ['"Inter"', 'system-ui', 'sans-serif'],
+              sans: ['"Inter"', 'sans-serif'],
+              display: ['"Space Grotesk"', 'sans-serif'],
             },
             colors: {
-              'inbox-orange': '#F36D36',
-              'inbox-green': '#8DC63F',
-              'inbox-green-dark': '#689F38',
-              'inbox-purple': '#D0368C',
-              'inbox-purple-hover': '#AD1457',
-              'inbox-blue': '#0070BA',
-              'slate-800': '#1e293b',
-              'brand-dark': '#020617',
-              'brand-light': '#F8FAFC',
+              'nat-dark': '#0B0C10',
+              'nat-gray': '#1F2833',
+              'nat-teal': '#66FCF1',
+              'nat-teal-dim': '#45A29E',
+              'nat-white': '#C5C6C7',
               'brand-primary': '#F36D36',
-              'brand-secondary': '#8DC63F',
-              'brand-navy': '#1E293B',
-              'brand-gold': '#F59E0B',
-              'brand-cyan': '#06B6D4',
-              'brand-violet': '#8B5CF6',
             },
             boxShadow: {
-              'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-              'input': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-              'gold': '0 4px 14px 0 rgba(245, 158, 11, 0.39)',
-              'neon': '0 0 10px rgba(243, 109, 54, 0.5), 0 0 20px rgba(243, 109, 54, 0.3)',
+              'neon': '0 0 20px rgba(102, 252, 241, 0.3)',
+              'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
             },
             animation: {
-              'fade-in': 'fadeIn 0.5s ease-out forwards',
-              'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
-              'slide-up': 'slideUp 0.5s ease-out forwards',
-              'scale-up': 'scaleUp 0.3s ease-out forwards',
-              'bounce-slow': 'bounce 3s infinite',
-              'blob': 'blob 10s infinite',
               'float': 'float 6s ease-in-out infinite',
-              'float-fast': 'float 5s ease-in-out infinite',
-              'hologram': 'hologram 3s linear infinite',
-              'pulse-subtle': 'pulseSubtle 2s infinite',
-              'spin-slow': 'spin 3s linear infinite',
-              'spin-reverse': 'reverseSpin 3s linear infinite',
-              'spin-reverse-slow': 'reverseSpin 8s linear infinite',
+              'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'orb-breath': 'orbBreath 4s ease-in-out infinite',
+              'scan': 'scan 3s linear infinite',
             },
             keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
-              },
-              fadeInUp: {
-                '0%': { opacity: '0', transform: 'translateY(20px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-              slideUp: {
-                '0%': { opacity: '0', transform: 'translateY(50px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' },
-              },
-              scaleUp: {
-                '0%': { opacity: '0', transform: 'scale(0.9)' },
-                '100%': { opacity: '1', transform: 'scale(1)' },
-              },
-              blob: {
-                "0%": { transform: "translate(0px, 0px) scale(1)" },
-                "33%": { transform: "translate(30px, -50px) scale(1.1)" },
-                "66%": { transform: "translate(-20px, 20px) scale(0.9)" },
-                "100%": { transform: "translate(0px, 0px) scale(1)" }
-              },
               float: {
-                "0%, 100%": { transform: "translateY(0)" },
-                "50%": { transform: "translateY(-20px)" }
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
               },
-              hologram: {
-                "0%": { backgroundPosition: "0% 50%" },
-                "100%": { backgroundPosition: "200% 50%" }
+              orbBreath: {
+                '0%, 100%': { transform: 'scale(1)', opacity: '0.8' },
+                '50%': { transform: 'scale(1.1)', opacity: '1' },
               },
-              pulseSubtle: {
-                "0%, 100%": { opacity: "1" },
-                "50%": { opacity: "0.8" }
-              },
-              reverseSpin: {
-                from: { transform: 'rotate(360deg)' },
-                to: { transform: 'rotate(0deg)' }
+              scan: {
+                '0%': { transform: 'translateY(-100%)' },
+                '100%': { transform: 'translateY(100%)' }
               }
             }
           }
@@ -107,25 +60,15 @@
       }
     </script>
     <style>
-      /* Smooth Scrolling & Base */
-      html { scroll-behavior: smooth; }
-      body { background-color: #fff; color: #333; }
-      .animation-delay-2000 { animation-delay: 2s; }
-      .animation-delay-4000 { animation-delay: 4s; }
-      
-      /* Hide scrollbar for clean UI */
-      .no-scrollbar::-webkit-scrollbar {
-          display: none;
+      body { background-color: #0B0C10; color: #C5C6C7; }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
       }
-      .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-      }
-      
-      .mask-gradient-right {
-        mask-image: linear-gradient(to right, black 85%, transparent 100%);
-        -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
-      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
   <script type="importmap">
 {
@@ -140,7 +83,7 @@
 }
 </script>
 </head>
-  <body class="antialiased font-sans">
+  <body class="antialiased font-sans bg-nat-dark">
     <div id="root"></div>
     <script type="module" src="/index.tsx"></script>
   </body>

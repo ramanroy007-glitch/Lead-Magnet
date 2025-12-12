@@ -168,7 +168,7 @@ const App: React.FC = () => {
     };
 
     return (
-        <div className="font-sans min-h-screen flex flex-col antialiased bg-gray-50 text-slate-800">
+        <div className="font-sans min-h-screen flex flex-col antialiased bg-nat-dark text-nat-white selection:bg-nat-teal selection:text-nat-dark">
             {page === 'admin' && (
                 <AdminDashboard 
                     onLogout={handleLogout} 

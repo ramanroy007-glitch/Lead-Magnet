@@ -6,8 +6,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    host: true, // Needed for Docker mapping
+    host: true, // Needed for Docker container mapping
     port: 5173,
+    watch: {
+      usePolling: true
+    }
   },
   build: {
     outDir: 'dist',
@@ -23,7 +26,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': '.', // Map @ to current directory (root) since there is no src folder
+      '@': '.', 
     },
   },
 })

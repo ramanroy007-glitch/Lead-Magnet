@@ -2,101 +2,100 @@
 import React, { useState, useEffect } from 'react';
 
 const MESSAGES = [
-    "👋 Hi! I'm Nat, your AI rewards assistant.",
-    "💡 Tip: Verify your email to unlock VIP payouts.",
     "🚀 I found 5 new high-value offers for you!",
-    "🔒 Your data is fully encrypted and secure.",
-    "💰 Top members are earning over $500 this month."
+    "💡 Tip: Surveys paying over $10 are available now.",
+    "🔒 Verified: Your profile is eligible for premium rewards.",
+    "👋 Hi! Tap here if you need help getting started."
 ];
 
 const AiGuide: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [messageIndex, setMessageIndex] = useState(0);
-    const [isHovered, setIsHovered] = useState(false);
     const [showBubble, setShowBubble] = useState(false);
 
     useEffect(() => {
-        // Initial delay for the robot to appear
+        // Initial entrance
         const timer = setTimeout(() => {
             setIsVisible(true);
-            // Show first message shortly after robot appears
-            setTimeout(() => setShowBubble(true), 800);
+            setTimeout(() => setShowBubble(true), 1000);
         }, 1500);
 
-        // Auto-rotate messages
+        // Auto-cycle messages every 8 seconds
         const interval = setInterval(() => {
-            if (!isHovered) {
-                cycleMessage();
-            }
+            cycleMessage();
         }, 8000);
 
         return () => {
             clearTimeout(timer);
             clearInterval(interval);
         };
-    }, [isHovered]);
+    }, []);
 
     const cycleMessage = () => {
         setShowBubble(false);
         setTimeout(() => {
             setMessageIndex((prev) => (prev + 1) % MESSAGES.length);
             setShowBubble(true);
-        }, 400); 
+        }, 500);
     };
 
     if (!isVisible) return null;
 
     return (
-        <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end pointer-events-none sm:bottom-10 sm:right-10">
+        <div className="fixed bottom-6 right-6 z-[999] flex flex-col items-end pointer-events-none">
             
-            {/* Holographic Speech Bubble */}
+            {/* 1. The Message Card (Exact Match to Request) */}
             <div 
                 className={`
-                    relative mb-4 mr-2 max-w-[240px] pointer-events-auto cursor-pointer
+                    relative mb-3 mr-1 max-w-[260px] pointer-events-auto cursor-pointer
                     transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] origin-bottom-right
-                    ${showBubble ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-50 translate-y-10'}
+                    ${showBubble ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-4'}
                 `}
                 onClick={cycleMessage}
             >
-                <div className="absolute inset-0 bg-white/95 backdrop-blur-xl rounded-2xl rounded-tr-sm shadow-xl shadow-slate-900/10 border border-slate-100"></div>
-                
-                <div className="relative p-4">
-                    <div className="flex items-center gap-2 mb-1">
-                        <span className="flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-green-400 opacity-75"></span>
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                {/* Card Background - Clean White with subtle shadow */}
+                <div className="bg-white rounded-2xl p-4 shadow-xl border border-gray-100 relative">
+                    
+                    {/* Header: Status Dot + Title */}
+                    <div className="flex items-center gap-2 mb-2 border-b border-gray-100 pb-2">
+                        <span className="relative flex h-2.5 w-2.5">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
                         </span>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Nat AI • Live</span>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-display">
+                            NAT AI • LIVE
+                        </span>
                     </div>
-                    <p className="text-sm font-medium text-slate-800 leading-relaxed">
+
+                    {/* Body Text */}
+                    <p className="text-sm font-semibold text-slate-800 leading-snug">
                         {MESSAGES[messageIndex]}
                     </p>
+                    
+                    {/* Little Triangle Tail pointing down to the orb */}
+                    <div className="absolute -bottom-2 right-8 w-4 h-4 bg-white transform rotate-45 border-r border-b border-gray-100"></div>
                 </div>
-
-                {/* Triangle Tail */}
-                <div className="absolute -bottom-2 right-6 w-4 h-4 bg-white border-r border-b border-slate-100 transform rotate-45"></div>
             </div>
 
-            {/* AI Orb Container */}
+            {/* 2. The Glowing Orb (Trigger) */}
             <div 
-                className="relative group cursor-pointer pointer-events-auto"
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                className="relative group cursor-pointer pointer-events-auto mr-4"
                 onClick={cycleMessage}
             >
-                {/* 3D Portal Base (Shadow/Glow) */}
-                <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-12 h-3 bg-slate-900/10 rounded-[100%] blur-sm"></div>
-
-                {/* CSS AI Orb - Reliable & Lightweight */}
-                <div className="relative w-16 h-16 sm:w-20 sm:h-20 transition-transform duration-300 ease-out group-hover:-translate-y-2 group-active:scale-95">
-                    <div className="relative w-full h-full flex items-center justify-center">
-                         {/* Outer Ring */}
-                         <div className="absolute inset-0 border-2 border-dashed border-inbox-orange rounded-full animate-spin-slow opacity-60"></div>
-                         {/* Middle Ring */}
-                         <div className="absolute inset-1 border-2 border-transparent border-r-inbox-green border-l-inbox-green rounded-full animate-spin-reverse opacity-80"></div>
-                         {/* Core */}
-                         <div className="absolute inset-4 bg-gradient-to-br from-inbox-orange to-inbox-purple rounded-full blur-[2px] shadow-neon animate-pulse"></div>
-                         <div className="absolute inset-4 bg-white/20 rounded-full"></div>
+                {/* Outer Glow Blur */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-tr from-brand-primary to-purple-500 rounded-full blur-xl opacity-60 animate-orb-breath group-hover:opacity-80 transition-opacity"></div>
+                
+                {/* The Sphere Itself */}
+                <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-2xl transition-transform duration-300 group-hover:scale-110">
+                    {/* Gradient Background */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-brand-primary via-red-400 to-purple-600 animate-spin-slow"></div>
+                    
+                    {/* Glass Shine Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/30 opacity-50"></div>
+                    
+                    {/* Center Icon */}
+                    <div className="absolute inset-0 flex items-center justify-center text-white text-xl">
+                        ✨
                     </div>
                 </div>
             </div>

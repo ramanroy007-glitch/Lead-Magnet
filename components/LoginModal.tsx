@@ -21,7 +21,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginComplet
     // Simulate API check
     setTimeout(() => {
         // Validation: Check if email exists in our "lead database" (localStorage)
-        const leads = JSON.parse(localStorage.getItem('emailLeads') || '[]');
+        const leads = JSON.parse(localStorage.getItem('smart_leads') || '[]');
         const userExists = leads.some((lead: any) => lead.email.toLowerCase() === email.trim().toLowerCase());
 
         if (userExists) {
@@ -38,43 +38,43 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginComplet
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity animate-fade-in"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity animate-fade-in"
         onClick={onClose}
       />
       
       {/* Modal Content */}
       <div className="relative w-full max-w-md z-10 animate-fade-in-up">
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden p-8">
+        <div className="glass-panel bg-[#121212] rounded-2xl shadow-2xl overflow-hidden p-8 border border-white/10">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Member Login</h2>
+                <h2 className="text-2xl font-bold text-white font-display">Member Login</h2>
                 <button 
                     onClick={onClose}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                    className="text-nat-white/40 hover:text-white transition-colors"
                 >
                     <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                 </button>
             </div>
             
-            <p className="text-gray-500 mb-6">Enter your email to access your dashboard and current offers.</p>
+            <p className="text-nat-white/60 mb-6">Enter your email to access your dashboard and current offers.</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Email Address</label>
+                    <label className="block text-xs font-bold text-nat-white/40 uppercase mb-1">Email Address</label>
                     <input 
                         type="email"
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className={`w-full px-4 py-3 rounded-xl border ${error ? 'border-red-500 focus:ring-red-200' : 'border-gray-200 focus:border-brand-primary focus:ring-brand-primary/10'} focus:ring-4 outline-none transition-all text-gray-900`}
+                        className={`w-full px-4 py-3 rounded-xl bg-white/5 border ${error ? 'border-red-500 focus:ring-red-900' : 'border-white/10 focus:border-nat-teal focus:ring-nat-teal/20'} focus:ring-1 outline-none transition-all text-white placeholder-white/20`}
                         placeholder="you@example.com"
                     />
-                    {error && <p className="text-red-500 text-xs font-bold mt-2 animate-pulse">{error}</p>}
+                    {error && <p className="text-red-400 text-xs font-bold mt-2 animate-pulse">{error}</p>}
                 </div>
                 
                 <button 
                     type="submit"
                     disabled={isLoading}
-                    className="w-full py-3.5 rounded-xl bg-brand-primary hover:bg-purple-800 text-white font-bold text-lg shadow-lg transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-xl bg-nat-teal hover:bg-nat-teal-dim text-nat-dark font-bold text-lg shadow-neon transition-all flex items-center justify-center gap-2"
                 >
                     {isLoading ? (
                         <>
@@ -85,8 +85,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onLoginComplet
                 </button>
             </form>
 
-            <div className="mt-6 pt-6 border-t border-gray-100 text-center text-sm text-gray-400">
-                Don't have an account? <button onClick={() => { onClose(); }} className="text-brand-primary font-bold hover:underline">Check Eligibility</button>
+            <div className="mt-6 pt-6 border-t border-white/10 text-center text-sm text-nat-white/40">
+                Don't have an account? <button onClick={() => { onClose(); }} className="text-nat-teal font-bold hover:underline">Check Eligibility</button>
             </div>
         </div>
       </div>

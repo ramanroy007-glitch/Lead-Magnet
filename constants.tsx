@@ -62,6 +62,7 @@ export const QUIZ_QUESTIONS = DEFAULT_QUIZ_CONFIG.questions; // Legacy export
 export const DEFAULT_OFFERS: CpaOffer[] = [
     {
         id: '1',
+        offerType: 'link',
         title: 'Enter to Win: Tech Bundle Giveaway',
         url: 'https://google.com',
         is_active: true,
@@ -75,6 +76,7 @@ export const DEFAULT_OFFERS: CpaOffer[] = [
     },
     {
         id: '2',
+        offerType: 'link',
         title: 'Premium Survey Panel Access',
         url: 'https://google.com',
         is_active: true,
@@ -88,6 +90,7 @@ export const DEFAULT_OFFERS: CpaOffer[] = [
     },
     {
         id: '3',
+        offerType: 'link',
         title: 'Exclusive Auto Insurance Savings',
         url: 'https://google.com',
         is_active: true,

@@ -1,5 +1,5 @@
 
-import type { SmartLead, AppConfig } from "../types";
+import type { SmartLead, Integration, SmtpProfile } from "../types";
 
 const getDeviceType = (): string => {
     const ua = navigator.userAgent;
@@ -18,6 +18,50 @@ const getUtmParams = () => {
         gclid: params.get('gclid') || undefined,
         fbclid: params.get('fbclid') || undefined,
     };
+};
+
+/**
+ * Rotates SMTP servers based on availability and daily limits.
+ * Resets limits if the day has changed.
+ * Increments usage for the selected server.
+ */
+export const rotateSmtpServers = (): SmtpProfile | null => {
+    try {
+        const profiles: SmtpProfile[] = JSON.parse(localStorage.getItem('smtp_profiles') || '[]');
+        if (profiles.length === 0) return null;
+
+        const today = new Date().toISOString().split('T')[0];
+        let profilesChanged = false;
+
+        // 1. Daily Reset Check
+        profiles.forEach(p => {
+            if (p.lastResetDate !== today) {
+                p.currentUsage = 0;
+                p.lastResetDate = today;
+                profilesChanged = true;
+            }
+        });
+
+        // 2. Find Available Server (Simple Strategy: First Active with Capacity)
+        const activeProfile = profiles.find(p => p.isActive && p.currentUsage < p.dailyLimit);
+
+        if (activeProfile) {
+            activeProfile.currentUsage++;
+            profilesChanged = true;
+        } else {
+            console.warn("No available SMTP servers: All limits reached or inactive.");
+        }
+
+        if (profilesChanged) {
+            localStorage.setItem('smtp_profiles', JSON.stringify(profiles));
+        }
+
+        return activeProfile || null;
+
+    } catch (error) {
+        console.error("SMTP Rotation Error", error);
+        return null;
+    }
 };
 
 export const saveLead = async (
@@ -59,12 +103,12 @@ export const saveLead = async (
         });
     }
 
-    // 3. Webhook Integration (Make.com / Zapier)
+    // 3. Webhook Integration (NEXT GEN CONNECTIVITY)
     try {
-        const config: AppConfig = JSON.parse(localStorage.getItem('app_config') || '{}');
-        const webhookUrl = config.webhookUrl;
+        const integrations: Integration[] = JSON.parse(localStorage.getItem('integrations') || '[]');
+        const activeIntegrations = integrations.filter(i => i.isActive);
         
-        if (webhookUrl && (webhookUrl.startsWith('http') || webhookUrl.startsWith('https'))) {
+        if (activeIntegrations.length > 0) {
             const payload = JSON.stringify({
                 event: "lead_captured",
                 lead: lead,
@@ -74,26 +118,36 @@ export const saveLead = async (
                 }
             });
             
-            // PREFERRED METHOD: sendBeacon (Reliable during redirects)
-            const blob = new Blob([payload], { type: 'application/json' });
-            const beaconSent = navigator.sendBeacon(webhookUrl, blob);
+            // Blast to all configured endpoints
+            activeIntegrations.forEach(int => {
+                if (!int.webhookUrl) return;
 
-            if (!beaconSent) {
-                // Fallback to Fetch with Keepalive if beacon fails or is too large
-                fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: payload,
-                    keepalive: true
-                }).catch(err => console.error("Webhook fetch failed", err));
-            } else {
-                console.log("Webhook queued via Beacon");
-            }
-        } else {
-            console.log("No webhook URL configured in Admin");
+                // Use Beacon for reliability on page unload/redirects
+                const blob = new Blob([payload], { type: 'application/json' });
+                const beaconSent = navigator.sendBeacon(int.webhookUrl, blob);
+
+                if (!beaconSent) {
+                    fetch(int.webhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: payload,
+                        keepalive: true
+                    }).catch(err => console.error(`Webhook to ${int.name} failed`, err));
+                } else {
+                    console.log(`Lead sent to ${int.name}`);
+                }
+            });
         }
     } catch (e) {
         console.error("Integration logic failed", e);
+    }
+
+    // 4. SMTP Rotation (Backend Simulation)
+    // We call this to increment the counters and simulate sending an email.
+    // In a real backend, this would return the credentials to use for nodemailer.
+    const selectedSmtp = rotateSmtpServers();
+    if (selectedSmtp) {
+        console.log(`[System] Lead confirmation email queued via: ${selectedSmtp.name}`);
     }
 
     return lead;

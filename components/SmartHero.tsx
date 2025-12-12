@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import type { SmartLead, SiteContentConfig, QuizConfig } from '../types';
 import QuizModal from './QuizModal';
-import MagicBackground from './MagicBackground';
 
 interface SmartHeroProps {
   onLeadCaptured: (lead: SmartLead) => void;
@@ -20,102 +18,103 @@ const SmartHero: React.FC<SmartHeroProps> = ({ onLeadCaptured, content, quizConf
     };
 
     return (
-        <section className="relative w-full min-h-[calc(100vh-60px)] flex items-center justify-center overflow-hidden bg-slate-50 pt-20 md:pt-28 pb-8 md:pb-12">
+        <section className="relative w-full min-h-[90vh] flex flex-col justify-center overflow-hidden bg-nat-dark pt-24 pb-12">
             
-            {/* Dynamic Gradient Background */}
-            <MagicBackground />
+            {/* Background Atmosphere */}
+            <div className="absolute top-[-20%] right-[-10%] w-[600px] h-[600px] bg-brand-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-nat-teal/5 rounded-full blur-[100px] pointer-events-none"></div>
 
-            <div className="container mx-auto px-4 md:px-6 max-w-6xl relative z-10 flex flex-col md:flex-row items-center gap-8 lg:gap-20">
-                
-                {/* Left: Text Content - High Contrast for Readability */}
-                <div className="flex-1 text-center md:text-left animate-fade-in order-1 md:order-1 mt-2 md:mt-0 relative">
+            <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+                <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-24">
                     
-                    {/* Trust Badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/90 backdrop-blur-sm border border-inbox-orange/20 shadow-sm mb-4 md:mb-8 mx-auto md:mx-0">
-                        <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-inbox-green animate-pulse"></span>
-                        <span className="text-inbox-orange font-bold text-[10px] md:text-xs uppercase tracking-wide">
-                            {content.hero.trustText}
-                        </span>
-                    </div>
+                    {/* LEFT: Copy */}
+                    <div className="flex-1 text-center lg:text-left">
+                        
+                        {/* Status Chip */}
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-8 animate-fade-in-up">
+                             <div className="w-2 h-2 bg-nat-teal rounded-full animate-pulse"></div>
+                             <span className="text-xs font-bold text-nat-teal uppercase tracking-widest font-display">
+                                Official Reward Portal
+                             </span>
+                        </div>
 
-                    <div className="relative">
-                        <h1 className="text-3xl sm:text-5xl lg:text-7xl font-extrabold mb-4 md:mb-6 leading-[1.1] tracking-tight text-slate-900 drop-shadow-sm">
-                            {content.hero.headline}
+                        <h1 className="text-5xl md:text-7xl font-display font-bold text-white leading-[1.1] mb-6 tracking-tight animate-fade-in-up" style={{animationDelay: '100ms'}}>
+                            Your Opinion.<br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-nat-teal">
+                                Real Value.
+                            </span>
                         </h1>
                         
-                        {/* Desktop Mascot Decoration - NEW CSS HOLOGRAM */}
-                        <div className="hidden lg:block absolute -top-16 -right-16 w-32 h-32 animate-float pointer-events-none">
-                            <div className="relative w-full h-full flex items-center justify-center">
-                                {/* Outer Ring */}
-                                <div className="absolute inset-0 border-[3px] border-dashed border-inbox-orange/40 rounded-full animate-spin-slow"></div>
-                                {/* Middle Ring */}
-                                <div className="absolute inset-2 border-[3px] border-transparent border-t-inbox-green/60 border-l-inbox-green/60 rounded-full animate-spin-reverse"></div>
-                                {/* Inner Ring */}
-                                <div className="absolute inset-6 border-[2px] border-inbox-purple/50 rounded-full animate-pulse"></div>
-                                {/* Core */}
-                                <div className="absolute inset-10 bg-gradient-to-tr from-inbox-orange to-inbox-purple rounded-full blur-md shadow-neon animate-pulse-subtle"></div>
-                                <div className="absolute inset-10 bg-white/30 rounded-full"></div>
+                        <p className="text-lg md:text-xl text-nat-white/70 mb-10 font-light leading-relaxed max-w-2xl mx-auto lg:mx-0 animate-fade-in-up" style={{animationDelay: '200ms'}}>
+                            {content.hero.subheadline} Connect with 500+ top brands looking for your feedback. Secure, verified, and instant.
+                        </p>
+                        
+                        {/* Stats Row */}
+                        <div className="flex flex-wrap justify-center lg:justify-start gap-8 mb-8 animate-fade-in-up" style={{animationDelay: '300ms'}}>
+                            <div>
+                                <p className="text-3xl font-display font-bold text-white">$8.5M+</p>
+                                <p className="text-xs text-nat-white/50 uppercase tracking-wide">Paid Out</p>
+                            </div>
+                            <div className="w-px h-10 bg-white/10"></div>
+                            <div>
+                                <p className="text-3xl font-display font-bold text-white">45k+</p>
+                                <p className="text-xs text-nat-white/50 uppercase tracking-wide">Active Members</p>
+                            </div>
+                            <div className="w-px h-10 bg-white/10"></div>
+                            <div>
+                                <p className="text-3xl font-display font-bold text-white">24/7</p>
+                                <p className="text-xs text-nat-white/50 uppercase tracking-wide">Support</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <p className="text-sm sm:text-xl text-slate-700 mb-6 md:mb-8 leading-relaxed max-w-lg mx-auto md:mx-0 font-medium line-clamp-2 md:line-clamp-none">
-                        {content.hero.subheadline}
-                    </p>
-                    
-                    {/* Benefits Grid */}
-                    <div className="hidden sm:flex flex-wrap justify-center md:justify-start gap-3 text-sm font-bold text-slate-600 mb-4 md:mb-0">
-                        <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-xl border border-white shadow-sm">
-                            <span className="text-inbox-orange text-lg">🎁</span>
-                            Sweepstakes
-                        </div>
-                        <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-xl border border-white shadow-sm">
-                            <span className="text-inbox-green text-lg">💵</span>
-                            Paid Surveys
-                        </div>
-                        <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-xl border border-white shadow-sm">
-                            <span className="text-purple-500 text-lg">🏷️</span>
-                            Discounts
+
+                    {/* RIGHT: Glass Card Interface */}
+                    <div className="w-full max-w-md animate-fade-in-up" style={{animationDelay: '400ms'}}>
+                        <div className="glass-panel rounded-3xl p-8 relative overflow-hidden group">
+                            
+                            {/* Scanning Line Animation */}
+                            <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-nat-teal to-transparent opacity-0 group-hover:opacity-100 group-hover:translate-y-[400px] transition-all duration-[2s] ease-linear"></div>
+
+                            <div className="text-center mb-8">
+                                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+                                    <svg className="w-8 h-8 text-nat-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                </div>
+                                <h3 className="text-2xl font-display font-bold text-white mb-2">Check Eligibility</h3>
+                                <p className="text-nat-white/60 text-sm">Enter your email to verify access.</p>
+                            </div>
+
+                            <form onSubmit={handleInitialSubmit} className="space-y-4">
+                                <div className="relative">
+                                    <input 
+                                        type="email" 
+                                        required
+                                        placeholder="name@example.com" 
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full bg-nat-dark/50 border border-white/10 rounded-xl px-5 py-4 text-white placeholder-white/30 focus:outline-none focus:border-nat-teal/50 focus:ring-1 focus:ring-nat-teal/50 transition-all"
+                                    />
+                                    <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                                        <div className="w-2 h-2 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)]"></div>
+                                    </div>
+                                </div>
+
+                                <button 
+                                    type="submit" 
+                                    className="w-full py-4 bg-nat-teal text-nat-dark font-bold text-lg rounded-xl hover:bg-nat-teal-dim transition-all transform active:scale-95 shadow-neon"
+                                >
+                                    Get Started
+                                </button>
+                            </form>
+
+                            <div className="mt-6 pt-6 border-t border-white/5 text-center">
+                                <p className="text-xs text-nat-white/40">
+                                    <span className="text-nat-teal">🔒 Secure 256-bit SSL Connection.</span> Your data is protected.
+                                </p>
+                            </div>
                         </div>
                     </div>
+
                 </div>
-
-                {/* Right: Signup Form Card - Glassmorphism */}
-                <div className="w-full md:w-[460px] bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-6 sm:p-8 relative animate-fade-in delay-100 border border-white ring-1 ring-slate-200 transform hover:scale-[1.01] transition-transform duration-500 order-2 md:order-2 z-20">
-                    {/* Gradient Header Line */}
-                    <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-inbox-orange via-yellow-400 to-inbox-green rounded-t-3xl"></div>
-
-                    <div className="text-center mb-6 mt-2">
-                        <h2 className="text-slate-900 font-black text-2xl sm:text-3xl mb-1">Check Eligibility</h2>
-                        <p className="text-slate-500 font-medium text-sm sm:text-base">See what offers are available for you.</p>
-                    </div>
-                    
-                    <form onSubmit={handleInitialSubmit} className="space-y-4">
-                        <div className="relative group">
-                            <input 
-                                type="email" 
-                                required
-                                placeholder="Enter your email address" 
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-5 py-4 rounded-xl border-2 border-slate-200 focus:border-inbox-orange focus:ring-4 focus:ring-orange-500/10 focus:outline-none transition-all text-slate-900 placeholder-slate-400 font-bold text-lg bg-slate-50 focus:bg-white text-center"
-                            />
-                        </div>
-
-                        <button 
-                            type="submit" 
-                            className="w-full py-4 sm:py-5 bg-gradient-to-r from-inbox-orange to-orange-600 hover:to-orange-700 text-white font-black text-xl rounded-xl shadow-xl shadow-orange-500/20 transition-all hover:-translate-y-1 hover:shadow-orange-500/40 active:scale-95 flex items-center justify-center gap-2 touch-manipulation"
-                        >
-                            {content.hero.ctaText}
-                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
-                        </button>
-
-                        <p className="text-[10px] text-slate-400 text-center px-4 leading-normal mt-4">
-                            By clicking "{content.hero.ctaText}", you agree to our <a href="#/terms" className="underline hover:text-inbox-orange text-slate-500 font-bold">Terms</a> & <a href="#/privacy" className="underline hover:text-inbox-orange text-slate-500 font-bold">Privacy Policy</a>. <br className="hidden sm:block"/>We are an independent rewards aggregator.
-                        </p>
-                    </form>
-                </div>
-
             </div>
 
             <QuizModal 

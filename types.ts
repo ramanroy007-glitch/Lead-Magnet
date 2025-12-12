@@ -29,8 +29,11 @@ export interface SmartLead {
 // CPA Offer with rotation rules
 export interface CpaOffer {
     id: string;
+    offerType: 'link' | 'call'; // NEW: Support for Pay Per Call
     title: string;
-    url: string;
+    url: string; // Affiliate Link or Destination
+    phoneNumber?: string; // NEW: For Pay Per Call
+    conversionTrigger?: string; // e.g. "90s Duration" or "Email Submit"
     weight: number; 
     is_active: boolean;
     description?: string;
@@ -40,6 +43,7 @@ export interface CpaOffer {
     ctaText?: string;
     instructions?: string;
     popularity?: number; // 0-100
+    lastUpdated?: string;
 }
 
 // Dynamic Website Content Config
@@ -81,7 +85,35 @@ export interface QuizConfig {
     emailStepSubtext: string;
 }
 
-// SMTP / Email Configuration
+// --- CONNECTIVITY HUB TYPES ---
+
+export type IntegrationProvider = 'mailchimp' | 'aweber' | 'getresponse' | 'activecampaign' | 'convertkit' | 'zapier' | 'generic';
+
+export interface Integration {
+    id: string;
+    provider: IntegrationProvider;
+    name: string;
+    webhookUrl: string;
+    isActive: boolean;
+    lastSync?: string;
+    eventTrigger: 'lead_captured';
+}
+
+export interface SmtpProfile {
+    id: string;
+    name: string;
+    host: string;
+    port: number;
+    user: string;
+    pass: string; // Stored encrypted/hidden in UI
+    fromEmail: string;
+    dailyLimit: number;
+    currentUsage: number;
+    isActive: boolean;
+    lastResetDate?: string; // Tracks the last date usage was reset
+}
+
+// Legacy support
 export interface SmtpConfig {
     provider: 'sendgrid' | 'mailgun' | 'smtp' | 'none';
     host: string;
@@ -111,7 +143,7 @@ export interface AppConfig {
     defaultCpaUrl: string; // The fallback URL
     redirectRule: 'single' | 'rotate' | 'offer_wall'; 
     // Integrations
-    webhookUrl?: string; // For Make.com / Zapier
+    webhookUrl?: string; // Legacy single webhook
     googleAnalyticsId?: string;
 }
 
@@ -122,14 +154,4 @@ export interface AnalyticsLog {
     offer_id: string;
     timestamp: string;
     device: string;
-}
-
-// Global Declaration for Custom Elements
-// This logic ensures Typescript recognizes the lottie-player element
-declare global {
-    namespace JSX {
-        interface IntrinsicElements {
-            'lottie-player': any;
-        }
-    }
 }

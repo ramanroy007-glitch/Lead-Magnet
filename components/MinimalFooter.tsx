@@ -12,7 +12,6 @@ const MinimalFooter: React.FC<MinimalFooterProps> = ({ onNavigate }) => {
   const clickTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    // Cleanup timeout on unmount
     return () => {
       if (clickTimeoutRef.current) {
         clearTimeout(clickTimeoutRef.current);
@@ -32,7 +31,6 @@ const MinimalFooter: React.FC<MinimalFooterProps> = ({ onNavigate }) => {
       setShowAdminLink(true);
     }
 
-    // Reset counter if user stops clicking for 2 seconds
     clickTimeoutRef.current = window.setTimeout(() => {
       setAdminClickCount(0);
     }, 2000);
@@ -49,8 +47,8 @@ const MinimalFooter: React.FC<MinimalFooterProps> = ({ onNavigate }) => {
          <div className="flex flex-wrap justify-center gap-6 mb-6">
             <button onClick={(e) => handleNav(e, 'privacy')} className="text-slate-400 hover:text-nat-teal hover:underline text-xs">Privacy Policy</button>
             <button onClick={(e) => handleNav(e, 'terms')} className="text-slate-400 hover:text-nat-teal hover:underline text-xs">Terms of Service</button>
-            <a href="mailto:support@natrajrewards.com" className="text-slate-400 hover:text-nat-teal hover:underline text-xs">Contact Support</a>
-            <span className="text-slate-400 text-xs cursor-not-allowed opacity-50">DMCA</span>
+            <button onClick={(e) => handleNav(e, 'contact')} className="text-slate-400 hover:text-nat-teal hover:underline text-xs">Contact Support</button>
+            <button onClick={(e) => handleNav(e, 'dmca')} className="text-slate-400 hover:text-nat-teal hover:underline text-xs">DMCA</button>
          </div>
          
          <div className="text-xs text-slate-600">

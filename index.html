@@ -1,35 +1,22 @@
+
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
-    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Natraj Rewards - Earn Today</title>
     
-    <!-- SEO & Core Meta Tags -->
-    <title>Natraj Rewards - Verified Offers & Consumer Rewards</title>
-    <meta name="description" content="Discover verified consumer rewards, paid surveys, and savings opportunities. Check your eligibility for exclusive offers today." />
-    <meta name="theme-color" content="#0F172A">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Natraj Rewards - Check Your Eligibility">
-    <meta property="og:description" content="See if you qualify for our latest consumer research and reward programs.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&w=1200&q=80">
-
-    <!-- FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
+    <!-- TAILWIND CSS CDN: Zero-config styling. 
+         This ensures specific animations work without complex PostCSS build steps. -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
         theme: {
           extend: {
             fontFamily: {
-              sans: ['"Inter"', 'sans-serif'],
-              display: ['"Inter"', 'sans-serif'],
+              sans: ['Inter', 'sans-serif'],
+              display: ['Inter', 'sans-serif'],
             },
             colors: {
               'brand-dark': '#0F172A',
@@ -40,31 +27,23 @@
             },
             animation: {
               'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-              'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
               'float': 'float 6s ease-in-out infinite',
-              'shine': 'shine 2s linear infinite',
+              'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+              'orb-breath': 'orbBreath 10s ease-in-out infinite',
+              'spin-slow': 'spin 12s linear infinite',
             },
             keyframes: {
-              fadeInUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
               float: { '0%, 100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
-              shine: {
-                '0%': { 'background-position': '-200% 0' },
-                '100%': { 'background-position': '200% 0' },
-              }
+              fadeInUp: { '0%': { opacity: 0, transform: 'translateY(20px)' }, '100%': { opacity: 1, transform: 'translateY(0)' } },
+              orbBreath: { '0%, 100%': { transform: 'translate(-50%, -50%) scale(1)', opacity: '0.6' }, '50%': { transform: 'translate(-50%, -50%) scale(1.2)', opacity: '0.4' } }
             }
           }
         }
       }
     </script>
-    <style>
-      body { background-color: #0F172A; color: #F8FAFC; }
-      .glass-panel { 
-        background-color: rgba(30, 41, 59, 0.7); 
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-    </style>
-<script type="importmap">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+  <script type="importmap">
 {
   "imports": {
     "react": "https://esm.sh/react@^19.2.3",
@@ -77,21 +56,9 @@
 }
 </script>
 </head>
-  <body class="antialiased font-sans">
+  <body class="bg-nat-dark text-nat-white antialiased">
     <div id="root"></div>
-    <!-- Vite handles src="./index.tsx" automatically -->
-    <script type="module" src="./index.tsx"></script>
-    
-    <!-- Compliance Footer -->
-    <footer class="bg-[#0B1120] text-slate-500 py-8 text-[10px] text-center border-t border-slate-800">
-      <div class="container mx-auto px-4 max-w-4xl">
-        <p class="mb-4">
-          This site is not a part of the Facebook website or Facebook Inc. Additionally, This site is NOT endorsed by Facebook in any way. FACEBOOK is a trademark of FACEBOOK, Inc.
-        </p>
-        <p>
-          DISCLAIMER: All results stated are for illustrative purposes. Your results may vary. We are an independent rewards program and are not affiliated with any of the brands listed unless explicitly stated.
-        </p>
-      </div>
-    </footer>
+    <!-- VITE ENTRY POINT -->
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

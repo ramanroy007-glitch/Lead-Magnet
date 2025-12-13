@@ -1,0 +1,30 @@
+
+/* Global Resets */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #0B1120;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0B1120; 
+}
+::-webkit-scrollbar-thumb {
+  background: #1E293B; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155; 
+}
+
+/* Utility for glass effects */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}

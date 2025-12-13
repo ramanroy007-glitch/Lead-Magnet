@@ -23,9 +23,10 @@ import type { SmartLead, CpaOffer, AppConfig, SiteContentConfig, QuizConfig, Ver
 import { DEFAULT_OFFERS, DEFAULT_SITE_CONTENT, DEFAULT_QUIZ_CONFIG } from './constants';
 import { generateSeoContent } from './services/gemini';
 
+// Lazy Load Quiz to speed up initial render and reduce bundle size
 const QuizModal = lazy(() => import('./components/QuizModal'));
 
-// Helper for safe parsing
+// Helper for safe JSON parsing to prevent runtime crashes
 const safeParse = <T,>(key: string, fallback: T): T => {
     try {
         const item = localStorage.getItem(key);
@@ -36,14 +37,9 @@ const safeParse = <T,>(key: string, fallback: T): T => {
     }
 };
 
-// Premium Loading Spinner Component
 const FullScreenLoader = () => (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-nat-dark/80 backdrop-blur-md">
-        <div className="relative w-16 h-16 mb-4">
-            <div className="absolute inset-0 border-4 border-slate-700 rounded-full"></div>
-            <div className="absolute inset-0 border-4 border-t-nat-teal border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin"></div>
-        </div>
-        <p className="text-nat-teal font-bold tracking-widest text-xs uppercase animate-pulse">Loading Experience</p>
+        <div className="w-12 h-12 border-4 border-nat-teal border-t-transparent rounded-full animate-spin"></div>
     </div>
 );
 
@@ -54,9 +50,14 @@ const App: React.FC = () => {
     const [siteContent, setSiteContent] = useState<SiteContentConfig>(DEFAULT_SITE_CONTENT);
     const [quizConfig, setQuizConfig] = useState<QuizConfig>(DEFAULT_QUIZ_CONFIG);
     const [versionHistory, setVersionHistory] = useState<VersionData[]>([]);
+    
+    // UI State
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
     const [isQuizOpen, setIsQuizOpen] = useState(false);
-    const [seoContent, setSeoContent] = useState({ title: 'Loading AI Content...', content: 'Please wait while our intelligent system prepares your information.'});
+    const [seoContent, setSeoContent] = useState({ 
+        title: 'Loading AI Content...', 
+        content: 'Please wait while our intelligent system prepares your information.'
+    });
     
     const [config, setConfig] = useState<AppConfig>({ 
         brandName: 'Natraj Rewards', 
@@ -66,22 +67,22 @@ const App: React.FC = () => {
     });
 
     useEffect(() => {
-        const fetchAiContent = async () => {
+        // Load initial data
+        const loadData = async () => {
+            setOffers(safeParse('cpa_offers', DEFAULT_OFFERS));
+            setSiteContent(safeParse('site_content', DEFAULT_SITE_CONTENT));
+            setQuizConfig(safeParse('quiz_config', DEFAULT_QUIZ_CONFIG));
+            setVersionHistory(safeParse('version_history', []));
+            setConfig(prev => ({ ...prev, ...safeParse('app_config', {}) }));
+            
+            // Load AI Content
             const content = await generateSeoContent();
             setSeoContent(content);
         };
-
-        fetchAiContent();
-        
-        // Safe loading of data
-        setOffers(safeParse('cpa_offers', DEFAULT_OFFERS));
-        setSiteContent(safeParse('site_content', DEFAULT_SITE_CONTENT));
-        setQuizConfig(safeParse('quiz_config', DEFAULT_QUIZ_CONFIG));
-        setVersionHistory(safeParse('version_history', []));
-        setConfig(prev => ({ ...prev, ...safeParse('app_config', {}) }));
-
+        loadData();
     }, []);
 
+    // State Persistence Handlers
     const handleUpdateContent = (newContent: SiteContentConfig) => {
         setSiteContent(newContent);
         localStorage.setItem('site_content', JSON.stringify(newContent));
@@ -117,6 +118,7 @@ const App: React.FC = () => {
         }
     };
     
+    // Routing Logic: Uses Hash (#) to work perfectly on static hosting
     useEffect(() => {
         const handleHashChange = () => {
             const hash = window.location.hash.replace('#/', '').toLowerCase();
@@ -138,20 +140,10 @@ const App: React.FC = () => {
         window.location.hash = `#/${targetPage}`;
     };
 
-    const handleLoginSuccess = () => {
-        localStorage.setItem('admin_session', 'true');
-        navigate('admin');
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('admin_session');
-        navigate('home');
-    };
-
     const handleLeadCaptured = (lead: SmartLead) => {
         setIsQuizOpen(false);
         setLastLead(lead);
-        sessionStorage.setItem('new_signup', 'true'); // Flag for Welcome Modal
+        sessionStorage.setItem('new_signup', 'true');
         if (config.redirectRule === 'single') {
             performRedirect(lead);
         } else {
@@ -159,16 +151,26 @@ const App: React.FC = () => {
         }
     };
 
-    const handleStartSignup = () => setIsQuizOpen(true);
-    
-    const isModalOpen = isQuizOpen || isLoginModalOpen;
-
     const renderPage = () => {
         switch(page) {
             case 'admin':
-                return <AdminDashboard onLogout={handleLogout} currentOffers={offers} onUpdateOffers={handleUpdateOffers} currentContent={siteContent} onUpdateContent={handleUpdateContent} currentQuizConfig={quizConfig} onUpdateQuizConfig={handleUpdateQuizConfig} versionHistory={versionHistory} onSaveVersion={handleSaveVersion} onRestoreVersion={handleRestoreVersion} />;
+                return <AdminDashboard 
+                    onLogout={() => { localStorage.removeItem('admin_session'); navigate('home'); }} 
+                    currentOffers={offers} 
+                    onUpdateOffers={handleUpdateOffers} 
+                    currentContent={siteContent} 
+                    onUpdateContent={handleUpdateContent} 
+                    currentQuizConfig={quizConfig} 
+                    onUpdateQuizConfig={handleUpdateQuizConfig} 
+                    versionHistory={versionHistory} 
+                    onSaveVersion={handleSaveVersion} 
+                    onRestoreVersion={handleRestoreVersion} 
+                />;
             case 'admin-login':
-                return <AdminLogin onLoginSuccess={handleLoginSuccess} onNavigateHome={() => navigate('home')} />;
+                return <AdminLogin 
+                    onLoginSuccess={() => { localStorage.setItem('admin_session', 'true'); navigate('admin'); }} 
+                    onNavigateHome={() => navigate('home')} 
+                />;
             case 'offers':
                 return <OfferWall offers={offers} lead={lastLead} onNavigateHome={() => navigate('home')} />;
             case 'privacy':
@@ -183,22 +185,28 @@ const App: React.FC = () => {
             default:
                 return (
                     <>
-                        <div className={`transition-all duration-500 ${isModalOpen ? 'blur-md' : ''}`}>
+                        <div className={`transition-all duration-500 ${(isQuizOpen || isLoginModalOpen) ? 'blur-md' : ''}`}>
                             <MagicBackground />
                             <div className="relative z-10">
                                 <MinimalHeader />
                                 <main>
-                                    <SmartHero onStartQuiz={handleStartSignup} content={siteContent} />
+                                    <SmartHero onStartQuiz={() => setIsQuizOpen(true)} content={siteContent} />
                                     <SocialProof />
                                     <HowItWorks />
                                     <SeoContent content={seoContent} />
                                 </main>
                                 <MinimalFooter onNavigate={navigate}/>
                                 <LiveNotifications />
-                                <AiGuide onStartQuiz={handleStartSignup} />
+                                <AiGuide onStartQuiz={() => setIsQuizOpen(true)} />
                             </div>
                         </div>
-                        <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginComplete={() => { setIsLoginModalOpen(false); navigate('offers'); }} />
+                        
+                        <LoginModal 
+                            isOpen={isLoginModalOpen} 
+                            onClose={() => setIsLoginModalOpen(false)} 
+                            onLoginComplete={() => { setIsLoginModalOpen(false); navigate('offers'); }} 
+                        />
+                        
                          <Suspense fallback={<FullScreenLoader />}>
                             {isQuizOpen && (
                                 <QuizModal 

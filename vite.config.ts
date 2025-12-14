@@ -5,16 +5,15 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // CRITICAL: Sets the base URL to root for proper asset loading on Coolify
+  // CRITICAL: Base must be '/' for standard Coolify static hosting
   base: '/',
   build: {
-    // CRITICAL: Output directory must be 'dist' for Coolify to find the files
+    // CRITICAL: Output directory must be 'dist'
     outDir: 'dist',
     emptyOutDir: true,
-    // optimize build for production
     sourcemap: false,
   },
-  // CRITICAL: Polyfill process.env so the Gemini AI SDK doesn't crash the browser
+  // CRITICAL: Polyfill process.env so the Gemini SDK doesn't crash in browser
   define: {
     'process.env': {}
   },

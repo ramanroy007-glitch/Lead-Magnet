@@ -1,4 +1,4 @@
-// /// <reference types="vite/client" />
+/// <reference types="vite/client" />
 
 interface ImportMetaEnv {
   readonly VITE_APP_TITLE: string
@@ -9,9 +9,10 @@ interface ImportMeta {
   readonly env: ImportMetaEnv
 }
 
-declare const process: {
+// FIX: Replaced NodeJS namespace with a direct declaration for `process` to avoid potential type resolution conflicts.
+declare var process: {
   env: {
-    [key: string]: string | undefined;
     API_KEY?: string;
+    [key: string]: string | undefined;
   }
 }

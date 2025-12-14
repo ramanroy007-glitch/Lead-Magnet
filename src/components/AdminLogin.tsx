@@ -31,16 +31,16 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onNavigateHome 
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-brand-light">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-slate-50">
       <div className="w-full max-w-sm animate-fade-in-up">
         
         <div className="text-center mb-8">
             <div className="w-12 h-12 mx-auto bg-brand-primary rounded-full flex items-center justify-center font-bold text-white text-2xl mb-4">N</div>
-            <h1 className="text-3xl font-extrabold text-brand-navy">Admin Portal</h1>
+            <h1 className="text-3xl font-extrabold text-slate-900">Admin Portal</h1>
             <p className="text-gray-500">Authorized Personnel Only</p>
         </div>
 
-        <div className="bg-white p-8 rounded-2xl shadow-card border border-gray-100">
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="password" className="block text-xs font-bold text-gray-500 mb-2 uppercase">Access Key</label>
@@ -50,7 +50,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onNavigateHome 
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className={`block w-full px-4 py-3 bg-brand-light border-2 ${error ? 'border-red-500' : 'border-gray-200'} rounded-lg text-brand-navy focus:outline-none focus:border-brand-primary focus:shadow-input transition-all font-mono text-center tracking-widest`}
+                  className={`block w-full px-4 py-3 bg-slate-100 border-2 ${error ? 'border-red-500' : 'border-gray-200'} rounded-lg text-slate-900 focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-orange-500/10 transition-all font-mono text-center tracking-widest`}
                   placeholder="••••••••"
                   disabled={isLoading}
               />
@@ -63,7 +63,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onNavigateHome 
             <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 px-4 bg-brand-primary text-white font-bold rounded-lg shadow-lg hover:opacity-90 transition-all transform active:scale-95 flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 bg-brand-primary text-white font-bold rounded-lg shadow-lg shadow-orange-500/30 hover:opacity-90 transition-all transform active:scale-95 flex items-center justify-center gap-2"
             >
                 {isLoading ? (
                     <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>

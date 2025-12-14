@@ -1,6 +1,6 @@
 
-import { GoogleGenAI, Type } from "@google/genai";
-import type { CpaOffer } from "../types";
+import { GoogleGenAI } from "@google/genai";
+import type { CpaOffer, SiteContentConfig } from "../types";
 
 const getAi = () => {
     // Access the injected variable directly
@@ -31,29 +31,21 @@ export const generateSeoContent = async (): Promise<{ title: string; content: st
     TASK: Write a title and a detailed, engaging paragraph for the homepage.
     Focus on what makes Natraj Rewards a market leader: its proprietary AI matching (reducing user disqualification rates), speed of payouts (citing an impressive average), and bank-grade security.
     Use illustrative statistics to add credibility (e.g., "reducing wasted time by up to 70%").
+
+    Return ONLY a valid JSON object with "title" and "content" keys.
+    Example: { "title": "The Data-Driven Approach to Earning Money Online in 2026", "content": "In an increasingly fragmented digital economy, Natraj Rewards emerges as a leader by tackling the primary pain points of the online rewards sector: inefficiency and slow payouts. Our analysis shows their AI matching technology reduces user disqualification by over 65%, connecting users only with surveys and offers they are pre-qualified for. This results in a higher earning potential and an average cash-out time of under 24 hours, a significant improvement over the industry standard of 3-5 business days. Combined with bank-grade data security, Natraj Rewards presents a compelling, data-backed platform for monetizing spare time effectively." }
+    Do not include any markdown formatting.
     `;
 
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
-            config: {
-                responseMimeType: 'application/json',
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        title: { type: Type.STRING },
-                        content: { type: Type.STRING },
-                    },
-                    required: ["title", "content"],
-                }
-            }
         });
 
-        if (response.text) {
-             return JSON.parse(response.text);
-        }
-        return fallback;
+        const text = response.text || "{}";
+        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        return JSON.parse(jsonStr);
     } catch (error) {
         console.error("AI SEO Content Generation Error", error);
         return fallback;
@@ -76,47 +68,36 @@ export const generateOfferFromLink = async (input: string): Promise<Partial<CpaO
 
     const prompt = `
     You are an expert Affiliate Marketer. Analyze this input: "${input}"
-    Analyze the input to create a compelling offer.
-    If the input is a phone number, set offerType to "call".
+    Return VALID JSON ONLY with these keys:
+    - offerType: "call" or "link"
+    - title: Catchy headline (max 50 chars)
+    - description: Persuasive text (max 100 chars)
+    - category: One of ['Health', 'Insurance', 'Home Services', 'Finance', 'Shopping', 'Research', 'Gaming', 'Apps', 'Other']
+    - payout: A realistic reward string (e.g. "Earn $25")
+    - conversionTrigger: e.g. "90s Duration", "Email Submit"
+    - ctaText: "Claim Now", "Call Agent", etc.
+    - imageUrl: A valid https://images.unsplash.com/... URL (High res, niche relevant).
+    JSON ONLY. No markdown.
     `;
 
     try {
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
             contents: prompt,
-            config: {
-                responseMimeType: 'application/json',
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        offerType: { type: Type.STRING, enum: ["call", "link"] },
-                        title: { type: Type.STRING },
-                        description: { type: Type.STRING },
-                        category: { type: Type.STRING, enum: ['Health', 'Insurance', 'Home Services', 'Finance', 'Shopping', 'Research', 'Gaming', 'Apps', 'Other'] },
-                        payout: { type: Type.STRING },
-                        conversionTrigger: { type: Type.STRING },
-                        ctaText: { type: Type.STRING },
-                        imageUrl: { type: Type.STRING },
-                        phoneNumber: { type: Type.STRING },
-                        url: { type: Type.STRING }
-                    },
-                    required: ["offerType", "title", "description", "category", "payout"],
-                }
-            }
         });
 
-        if (response.text) {
-            const data = JSON.parse(response.text);
-            if (data.offerType === 'call') {
-                data.phoneNumber = input;
-                data.url = '#'; 
-            } else {
-                data.url = input;
-            }
-            return data;
-        }
-        throw new Error("Empty response");
+        const text = response.text || "{}";
+        const jsonStr = text.replace(/```json/g, '').replace(/```/g, '').trim();
+        const data = JSON.parse(jsonStr);
 
+        if (data.offerType === 'call') {
+            data.phoneNumber = input;
+            data.url = '#'; 
+        } else {
+            data.url = input;
+        }
+
+        return data;
     } catch (error) {
         console.error("AI Offer Generation Error", error);
         return {
@@ -128,41 +109,5 @@ export const generateOfferFromLink = async (input: string): Promise<Partial<CpaO
             phoneNumber: isPhoneNumber ? input : undefined,
             url: isPhoneNumber ? '#' : input
         };
-    }
-};
-
-export const analyzeOfferCompliance = async (offer: Partial<CpaOffer>): Promise<{ isSafe: boolean; score: number; flags: string[] }> => {
-    const ai = getAi();
-    if (!ai) return { isSafe: true, score: 100, flags: ["AI Not Connected"] };
-
-    const prompt = `
-    Audit this Ad Offer for Google/Facebook Compliance.
-    Title: ${offer.title} | Desc: ${offer.description} | Payout: ${offer.payout}
-    `;
-
-    try {
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: prompt,
-            config: {
-                responseMimeType: 'application/json',
-                responseSchema: {
-                    type: Type.OBJECT,
-                    properties: {
-                        score: { type: Type.NUMBER },
-                        isSafe: { type: Type.BOOLEAN },
-                        flags: { type: Type.ARRAY, items: { type: Type.STRING } }
-                    },
-                    required: ["score", "isSafe", "flags"]
-                }
-            }
-        });
-
-        if (response.text) {
-             return JSON.parse(response.text);
-        }
-        return { isSafe: true, score: 50, flags: ["Empty AI Response"] };
-    } catch (error) {
-        return { isSafe: true, score: 50, flags: ["Error checking compliance."] };
     }
 };
